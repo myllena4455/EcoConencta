@@ -9,7 +9,7 @@ const state = {
     { id: 'EC-77106', material: 'Papel', weight: '5 kg', date: '17 Nov • 10h', status: 'Concluída' },
     { id: 'EC-76890', material: 'Vidro', weight: '12 kg', date: '14 Nov • 16h', status: 'Aceita' }
   ],
-  calls: [
+  calls: JSON.parse(localStorage.getItem('ecoCalls') || 'null') || [
     { id: 'EC-78421', address: 'Rua Setúbal, 812 — Boa Viagem', info: 'Plástico • 8 kg', mins: 18, status: 'Pendente', lat: -8.1276, lng: -34.9018 },
     { id: 'EC-78603', address: 'Av. Herculano Bandeira, 220', info: 'Papel • 5 kg', mins: 24, status: 'Pendente', lat: -8.111, lng: -34.9335 },
     { id: 'EC-78644', address: 'Rua Ernesto de Paula, 45 — Torre', info: 'Eletrônicos • 3 kg', mins: 31, status: 'Pendente', lat: -8.0414, lng: -34.9134 },
@@ -28,6 +28,12 @@ const state = {
   rating: 5
 };
 
+state.calls = state.calls.filter(call => {
+  const queued = state.offlineQueue.some(item => item.type === 'complete' && item.id === call.id);
+  const collection = state.collections.find(item => item.id === call.id);
+  return !queued && collection?.status !== 'Concluída';
+});
+
 function toast(message, icon = 'check-circle') {
   const item = document.createElement('div');
   item.className = 'toast';
@@ -41,8 +47,10 @@ function persist() {
   localStorage.setItem('ecoBalance', String(state.balance));
   localStorage.setItem('ecoCollectorMoney', String(state.collectorMoney));
   localStorage.setItem('ecoCollections', JSON.stringify(state.collections));
+  localStorage.setItem('ecoCalls', JSON.stringify(state.calls));
   localStorage.setItem('ecoReports', JSON.stringify(state.reports));
   localStorage.setItem('ecoFinancialHistory', JSON.stringify(state.financialHistory));
+  localStorage.setItem('ecoOfflineQueue', JSON.stringify(state.offlineQueue));
 }
 
 function switchModule(moduleName) {
@@ -52,9 +60,13 @@ function switchModule(moduleName) {
   window.scrollTo({ top: 0, behavior: 'smooth' });
   if (moduleName === 'resident' && window.ecoMap) setTimeout(() => window.ecoMap.invalidateSize(), 100);
   if (moduleName === 'collector' && window.collectorMap) setTimeout(() => window.collectorMap.invalidateSize(), 100);
+  if (moduleName === 'catalog' && window.catalogMap) setTimeout(() => window.catalogMap.invalidateSize(), 100);
 }
 
 $$('[data-module]').forEach(button => button.addEventListener('click', () => switchModule(button.dataset.module)));
+$$('[data-go-module]').forEach(button => {
+  button.addEventListener('click', () => switchModule(button.dataset.goModule));
+});
 $('#menuButton')?.addEventListener('click', () => $('#sidebar').classList.toggle('open'));
 $('#notificationButton')?.addEventListener('click', () => toast('Você tem 2 atualizações sobre suas coletas.', 'bell'));
 
@@ -160,41 +172,60 @@ function renderCalls() {
   drawCollectorRoute();
 }
 
+function recordCallCompletion(id) {
+  state.balance += 40;
+  state.collectorMoney += 55;
+  state.financialHistory.unshift({
+    type: 'entrada',
+    description: `Coleta ${id} concluída`,
+    value: 55,
+    date: new Date().toLocaleDateString('pt-BR') + ' • ' + new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
+  });
+
+  const collection = state.collections.find(item => item.id === id);
+  if (collection) collection.status = 'Concluída';
+}
+
+function syncOfflineQueue() {
+  const completedIds = [...new Set(state.offlineQueue
+    .filter(item => item.type === 'complete')
+    .map(item => item.id))];
+  if (!completedIds.length) return;
+
+  state.offlineQueue = state.offlineQueue.filter(item => item.type !== 'complete');
+  completedIds.forEach(id => {
+    state.calls = state.calls.filter(item => item.id !== id);
+    recordCallCompletion(id);
+  });
+
+  persist();
+  renderCalls();
+  renderCollections();
+  renderBalance();
+  renderFinancialHistory();
+  toast(`${completedIds.length} coleta(s) offline sincronizada(s).`, 'wifi');
+}
+
 function completeCall(id) {
   const call = state.calls.find(item => item.id === id);
   if (!call) return;
 
-  const operation = () => {
-    state.calls = state.calls.filter(item => item.id !== id);
-    state.balance += 40;
-    state.collectorMoney += 55;
-    state.financialHistory.unshift({
-      type: 'entrada',
-      description: `Coleta ${id} concluída`,
-      value: 55,
-      date: new Date().toLocaleDateString('pt-BR') + ' • ' + new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
-    });
-
-    const collection = state.collections.find(item => item.id === id);
-    if (collection) collection.status = 'Concluída';
-
-    persist();
-    renderCalls();
-    renderCollections();
-    renderBalance();
-    renderFinancialHistory();
-    toast('Coleta concluída! Morador recebeu moedas e catador recebeu pagamento.', 'coins');
-  };
-
+  state.calls = state.calls.filter(item => item.id !== id);
   if ($('#offlineToggle').checked) {
     state.offlineQueue.push({ id, type: 'complete', timestamp: Date.now() });
-    localStorage.setItem('ecoOfflineQueue', JSON.stringify(state.offlineQueue));
-    state.calls = state.calls.filter(item => item.id !== id);
+    persist();
     renderCalls();
     toast('Coleta concluída offline. Será sincronizada depois.', 'wifi-off');
-  } else {
-    operation();
+    return;
   }
+
+  recordCallCompletion(id);
+  persist();
+  renderCalls();
+  renderCollections();
+  renderBalance();
+  renderFinancialHistory();
+  toast('Coleta concluída! Morador recebeu moedas e catador recebeu pagamento.', 'coins');
 }
 
 function locateUser(addToMap = true, targetMap = window.ecoMap) {
@@ -216,14 +247,17 @@ function locateUser(addToMap = true, targetMap = window.ecoMap) {
 function initMaps() {
   window.ecoMap = L.map('map', { zoomControl: true }).setView([-8.0476, -34.877], 12);
   window.collectorMap = L.map('collectorMap', { zoomControl: true }).setView([-8.0476, -34.877], 12);
+  window.catalogMap = L.map('catalogMap', { zoomControl: true }).setView([-8.0476, -34.877], 12);
 
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap', maxZoom: 19 }).addTo(window.ecoMap);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap', maxZoom: 19 }).addTo(window.collectorMap);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap', maxZoom: 19 }).addTo(window.catalogMap);
 
   pevs.forEach(pev => {
     const popup = `<b>${pev.name}</b><br><span>${pev.address}</span><br><b>Materiais:</b> ${pev.materials}<br><b>Horário:</b> ${pev.hours}`;
     L.marker([pev.lat, pev.lng], { icon: pinIcon('#0284C7') }).addTo(window.ecoMap).bindPopup(popup);
     L.marker([pev.lat, pev.lng], { icon: pinIcon('#0284C7') }).addTo(window.collectorMap).bindPopup(popup);
+    L.marker([pev.lat, pev.lng], { icon: pinIcon('#0284C7') }).addTo(window.catalogMap).bindPopup(popup);
   });
 
   state.reports.forEach(addReportMarkerToMaps);
@@ -397,9 +431,9 @@ $('#invoiceFile')?.addEventListener('change', event => {
 });
 
 async function sha256(text) {
-  const bytes = new TextEncoder().encode(text + ':' + Date.now().toString());
+  const bytes = typeof text === 'string' ? new TextEncoder().encode(text) : text;
   const digest = await crypto.subtle.digest('SHA-256', bytes);
-  return [...new Uint8Array(digest)].map(byte => byte.toString(16).padStart(2, '0')).join('').slice(0, 32).toUpperCase();
+  return [...new Uint8Array(digest)].map(byte => byte.toString(16).padStart(2, '0')).join('').toUpperCase();
 }
 
 $('#validateInvoice')?.addEventListener('click', async () => {
@@ -408,7 +442,8 @@ $('#validateInvoice')?.addEventListener('click', async () => {
   button.innerHTML = 'Analisando documento…';
 
   await new Promise(resolve => setTimeout(resolve, 700));
-  const sample = $('#invoiceFile').files[0]?.name || ('NF-SIMULADA-' + Math.floor(100000 + Math.random() * 899999));
+  const file = $('#invoiceFile').files[0];
+  const sample = file ? await file.arrayBuffer() : 'NF-SIMULADA-' + Math.floor(100000 + Math.random() * 899999);
   const hash = await sha256(sample);
 
   if (state.invoiceHashes.includes(hash)) {
@@ -460,14 +495,12 @@ $('#printCertificate')?.addEventListener('click', () => window.print());
 $('#viewAllCollections')?.addEventListener('click', () => toast('Todas as coletas foram carregadas.', 'list'));
 $('#locateMe')?.addEventListener('click', () => locateUser(true, window.ecoMap));
 $('#locateCollector')?.addEventListener('click', () => locateUser(true, window.collectorMap));
+$('#locateCatalog')?.addEventListener('click', () => locateUser(true, window.catalogMap));
 $('#poolButton')?.addEventListener('click', () => toast('Chamados agrupados em 3 rotas por proximidade.', 'route'));
 
 $('#offlineToggle')?.addEventListener('change', event => {
   if (!event.target.checked && state.offlineQueue.length) {
-    const count = state.offlineQueue.length;
-    state.offlineQueue = [];
-    localStorage.removeItem('ecoOfflineQueue');
-    toast(`${count} coleta(s) offline sincronizada(s).`, 'wifi');
+    syncOfflineQueue();
   } else {
     toast(event.target.checked ? 'Modo offline ativado. Dados salvos no dispositivo.' : 'Conexão restaurada.', event.target.checked ? 'wifi-off' : 'wifi');
   }
@@ -680,7 +713,12 @@ $('#togglePassword')?.addEventListener('click', () => {
 function configureRole(role) {
   selectedRole = role;
   $$('.nav-item, .mobile-nav button').forEach(button => {
-    button.style.display = button.dataset.module === role ? '' : 'none';
+    const moduleName = button.dataset.module;
+    if (moduleName === 'home' || moduleName === 'catalog') {
+      button.style.display = '';
+    } else {
+      button.style.display = moduleName === role ? '' : 'none';
+    }
   });
   switchModule(role);
 
@@ -701,6 +739,7 @@ function configureRole(role) {
   $$('.profileInitials').forEach(element => {
     element.textContent = profile.name.split(' ').map(part => part[0]).slice(0, 2).join('').toUpperCase();
   });
+  renderProfilePhoto(profile.photo);
 
   const greetingName = role === 'resident' ? profile.name.split(' ')[0] : profile.name;
   const residentGreeting = $('#residentGreeting');
@@ -714,11 +753,7 @@ function configureRole(role) {
   $('#profileDocumentInput').value = profile.document || '';
   $('#profileCondoNameInput').value = profile.condoName || '';
 
-  const isManagement = role === 'management';
-  $('#profileCondoField').hidden = !isManagement;
-  $('#profileDocumentField').firstChild.textContent = isManagement ? 'CNPJ' : role === 'collector' ? 'CPF ou CNPJ' : 'CPF';
-  $('#profileDocumentInput').value = isManagement ? formatCnpj(profile.document || '') : formatCpf(profile.document || '');
-  syncPartnerSelectFromProfile();
+  renderProfilePhoto(profile.photo);
 }
 
 $('#registrationForm')?.addEventListener('submit', event => {
@@ -782,10 +817,31 @@ $$('.open-profile').forEach(button => button.addEventListener('click', () => ope
 $('#profilePhotoInput')?.addEventListener('change', event => {
   const file = event.target.files[0];
   if (!file) return;
+
+  if (file.size > 2 * 1024 * 1024) {
+    toast('Escolha uma imagem de até 2 MB.', 'circle-alert');
+    event.target.value = '';
+    return;
+  }
+
   const reader = new FileReader();
-  reader.onload = () => { $('#profilePhotoPreview').innerHTML = `<img src="${reader.result}" alt="Foto do perfil">`; };
+  reader.onload = () => {
+    renderProfilePhoto(reader.result);
+    window.pendingProfilePhoto = reader.result;
+  };
   reader.readAsDataURL(file);
 });
+
+function renderProfilePhoto(photo) {
+  if (!photo) return;
+
+  const preview = $('#profilePhotoPreview');
+  if (preview) preview.innerHTML = `<img src="${photo}" alt="Foto do perfil">`;
+
+  $$('.avatar.profileInitials').forEach(avatar => {
+    avatar.innerHTML = `<img src="${photo}" alt="Foto do perfil">`;
+  });
+}
 
 $('#saveProfile')?.addEventListener('click', () => {
   const previousProfile = JSON.parse(localStorage.getItem('ecoProfile') || 'null') || {};
@@ -796,14 +852,19 @@ $('#saveProfile')?.addEventListener('click', () => {
     email: $('#profileEmailInput').value,
     address: $('#profileAddressInput').value,
     document: $('#profileDocumentInput').value,
-    condoName: $('#profileCondoNameInput').value.trim() || previousProfile.condoName || ''
+    condoName: $('#profileCondoNameInput').value.trim() || previousProfile.condoName || '',
+    photo: window.pendingProfilePhoto || previousProfile.photo || ''
   };
+
+  window.pendingProfilePhoto = null;
 
   localStorage.setItem('ecoProfile', JSON.stringify(profile));
   $$('.profileName').forEach(element => { element.textContent = profile.name; });
   $$('.profileInitials').forEach(element => {
     element.textContent = profile.name.split(' ').map(part => part[0]).slice(0, 2).join('').toUpperCase();
   });
+  renderProfilePhoto(profile.photo);
+
   const savedRole = previousProfile.role || selectedRole;
   const greetingName = savedRole === 'resident' ? profile.name.split(' ')[0] : profile.name;
   const residentGreeting = $('#residentGreeting');
@@ -853,6 +914,9 @@ function init() {
   document.documentElement.setAttribute('xml:lang', 'pt-BR');
 
   initMaps();
+  if (state.offlineQueue.length) {
+    syncOfflineQueue();
+  }
   renderBalance();
   renderCollections();
   renderCalls();

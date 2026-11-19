@@ -7,7 +7,7 @@
   <meta http-equiv="Content-Language" content="pt-BR">
   <meta name="language" content="Portuguese">
   <title>EcoConecta — Recife Sustentável</title>
-  <link rel="icon" type="image/png" href="logo do appp tema claro.png">
+  <link rel="icon" type="image/png" href="assets/icone-claro.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
@@ -15,13 +15,16 @@
   <link rel="stylesheet" href="css/style.css">
   <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js"></script>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.4/build/qrcode.min.js"></script>
+  <script type="module">
+    import QRCode from 'https://cdn.jsdelivr.net/npm/qrcode@1.5.4/+esm';
+    window.QRCode = QRCode;
+  </script>
 </head>
 <body>
   <div class="onboarding" id="onboarding">
     <div class="onboarding-art">
       <div class="onboarding-brand">
-        <img src="logo.png" alt="EcoConecta">
+        <img src="assets/logo.png" alt="Logo EcoConecta">
       </div>
       <div class="onboarding-copy">
         <span class="onboarding-tag">RECIFE MAIS LIMPA • RECIFE MAIS SEGURA</span>
@@ -38,7 +41,7 @@
           <p>Escolha o perfil que melhor representa você.</p>
           <div class="role-grid">
             <button class="role-card selected" data-role="resident">
-              <span class="role-icon green"><i data-lucide="house-heart"></i></span>
+              <span class="role-icon green"><i data-lucide="home"></i></span>
               <strong>Morador</strong><small>Agende coleta, ganhe moedas e acompanhe impactos.</small><b><i data-lucide="check"></i></b>
             </button>
             <button class="role-card" data-role="collector">
@@ -87,10 +90,12 @@
 
   <aside class="sidebar" id="sidebar">
     <a class="brand" href="#" aria-label="EcoConecta">
-      <img class="brand-logo" src="logo do aplicativo toma escuro.png" alt="EcoConecta">
+      <img class="brand-logo" src="assets/icone-escuro.png" alt="Ícone escuro EcoConecta">
     </a>
-    <nav class="side-nav" aria-label="Módulos">
-      <button class="nav-item active" data-module="resident"><i data-lucide="home"></i><span>Morador</span></button>
+    <nav class="side-nav" aria-label="Navegação principal">
+      <button class="nav-item active" data-module="home"><i data-lucide="house"></i><span>Home</span></button>
+      <button class="nav-item" data-module="catalog"><i data-lucide="package-search"></i><span>Catálogo</span></button>
+      <button class="nav-item" data-module="resident"><i data-lucide="home"></i><span>Morador</span></button>
       <button class="nav-item" data-module="collector"><i data-lucide="recycle"></i><span>Catador</span></button>
       <button class="nav-item" data-module="management"><i data-lucide="building-2"></i><span>Gestão</span></button>
     </nav>
@@ -118,7 +123,54 @@
     </header>
 
     <main class="main-content">
-      <section class="module active" id="residentModule">
+      <section class="module active" id="homeModule">
+        <header class="page-heading home-heading">
+          <div><p class="eyebrow">ECONOMIA CIRCULAR EM RECIFE</p><h1>Bem-vindo ao EcoConecta</h1></div>
+          <button class="primary-button" data-go-module="catalog"><i data-lucide="package-search"></i> Ver catálogo</button>
+        </header>
+
+        <section class="home-hero card" aria-labelledby="homePurposeTitle">
+          <div>
+            <p class="eyebrow">NOSSO PROPÓSITO</p>
+            <h2 id="homePurposeTitle">Conectamos quem recicla a quem transforma</h2>
+            <p>O EcoConecta aproxima moradores, catadores, cooperativas e gestores para tornar a coleta seletiva simples, rastreável e recompensadora.</p>
+          </div>
+          <img src="assets/icone-claro.png" alt="Ícone verde representando sustentabilidade">
+        </section>
+
+        <section class="home-steps" aria-label="Como funciona">
+          <article class="card"><div class="stat-icon green"><i data-lucide="list-checks"></i></div><div><p class="eyebrow">1. CADASTRE</p><h3>Escolha seu perfil</h3><p>Morador, catador ou empresa encontra recursos adequados à sua rotina.</p></div></article>
+          <article class="card"><div class="stat-icon blue"><i data-lucide="calendar-plus"></i></div><div><p class="eyebrow">2. SOLICITE</p><h3>Agende ou aceite coletas</h3><p>Moradores agendam; catadores recebem chamados e otimizam rotas.</p></div></article>
+          <article class="card"><div class="stat-icon amber"><i data-lucide="coins"></i></div><div><p class="eyebrow">3. RECOMPENSE</p><h3>Ganhe Moedas Verdes</h3><p>Participe da economia circular e acompanhe seu impacto ambiental.</p></div></article>
+        </section>
+
+        <footer class="home-footer card">
+          <div><strong>Recife, Pernambuco</strong><span>Conectando pessoas e pontos de reciclagem</span></div>
+          <button class="secondary-button" data-go-module="resident"><i data-lucide="calendar-plus"></i> Agendar coleta</button>
+        </footer>
+      </section>
+
+      <section class="module" id="catalogModule">
+        <header class="page-heading">
+          <div><p class="eyebrow">CATÁLOGO ECOLÓGICO</p><h1>Materiais recicláveis</h1></div>
+          <button class="secondary-button" id="locateCatalog"><i data-lucide="crosshair"></i> Minha localização</button>
+        </header>
+
+        <section class="catalog-grid" aria-label="Tipos de materiais e recompensas">
+          <article class="card catalog-item"><div class="stat-icon blue"><i data-lucide="package"></i></div><div><h2>Plástico</h2><p>Garrafas, embalagens e potes limpos</p></div><strong>6 moedas/kg</strong></article>
+          <article class="card catalog-item"><div class="stat-icon green"><i data-lucide="newspaper"></i></div><div><h2>Papel</h2><p>Papelão, revistas e folhas secas</p></div><strong>4 moedas/kg</strong></article>
+          <article class="card catalog-item"><div class="stat-icon amber"><i data-lucide="wine"></i></div><div><h2>Vidro</h2><p>Potes e garrafas inteiros e separados</p></div><strong>5 moedas/kg</strong></article>
+          <article class="card catalog-item"><div class="stat-icon red"><i data-lucide="cog"></i></div><div><h2>Metal</h2><p>Latas de alumínio e aço limpas</p></div><strong>8 moedas/kg</strong></article>
+          <article class="card catalog-item"><div class="stat-icon green"><i data-lucide="laptop"></i></div><div><h2>Eletrônicos</h2><p>Equipamentos pequenos, fios e baterias</p></div><strong>12 moedas/kg</strong></article>
+        </section>
+
+        <section class="card map-card catalog-map-card" aria-labelledby="catalogMapTitle">
+          <div class="card-header"><div><p class="eyebrow">PONTOS DE ENTREGA VOLUNTÁRIA</p><h2 id="catalogMapTitle">PEVs próximos em Recife</h2></div></div>
+          <div id="catalogMap" aria-label="Mapa interativo dos pontos de reciclagem em Recife"></div>
+        </section>
+      </section>
+
+      <section class="module" id="residentModule">
         <div class="page-heading">
           <div><p class="eyebrow">VISÃO DO MORADOR</p><h1 id="residentGreeting">Olá, Ana! <span>🌿</span></h1></div>
           <button class="primary-button" id="openWizard"><i data-lucide="plus"></i> Agendar coleta</button>
@@ -267,7 +319,9 @@
     </main>
 
     <nav class="mobile-nav" aria-label="Navegação mobile">
-      <button class="active" data-module="resident"><i data-lucide="home"></i><span>Morador</span></button>
+      <button class="active" data-module="home"><i data-lucide="house"></i><span>Home</span></button>
+      <button data-module="catalog"><i data-lucide="package-search"></i><span>Catálogo</span></button>
+      <button data-module="resident"><i data-lucide="home"></i><span>Morador</span></button>
       <button data-module="collector"><i data-lucide="recycle"></i><span>Catador</span></button>
       <button data-module="management"><i data-lucide="building-2"></i><span>Gestão</span></button>
     </nav>
@@ -332,7 +386,7 @@
     <div class="modal certificate-modal">
       <button class="icon-button close-modal certificate-close" aria-label="Fechar"><i data-lucide="x"></i></button>
       <article class="certificate" id="certificate">
-        <div class="certificate-brand"><img src="logo.png" alt="EcoConecta"></div>
+        <div class="certificate-brand"><img src="assets/logo.png" alt="Logo EcoConecta no certificado"></div>
         <p>CERTIFICADO SOCIOAMBIENTAL</p><h2 id="certificatePartner">Condomínio Atlântico Recife</h2>
         <small id="certificatePartnerDetails">Endereço não informado</small>
         <small>Programa de Gestão de Resíduos Sólidos • PNRS / Lei 12.305</small>

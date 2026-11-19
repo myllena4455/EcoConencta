@@ -491,7 +491,7 @@ img { max-width: 100%; }
 .gps-status { color: var(--muted); font-size: 11px; }
 .stars { margin: 18px 0; display: flex; justify-content: center; }
 .stars button { border: 0; background: none; color: #CBD5E1; font-size: 38px; }
-.stars button.active { color: var(--cashback); }
+.stars button.active { color: #F59E0B; }
 .rating-modal textarea { width: 100%; margin-bottom: 12px; border: 1px solid var(--border); border-radius: 10px; padding: 12px; }
 
 .onboarding {
@@ -519,7 +519,13 @@ img { max-width: 100%; }
 .onboarding-benefits { margin-top: 28px; display: flex; gap: 10px; }
 .onboarding-benefits span { height: 38px; border: 1px solid rgba(255,255,255,.12); border-radius: 20px; display: flex; align-items: center; gap: 7px; padding: 0 12px; font-size: 11px; }
 .onboarding-benefits svg { width: 15px; color: var(--eco); }
-.onboarding-panel { display: grid; place-items: center; padding: 38px; }
+.onboarding-panel {
+  min-height: 0;
+  overflow-y: auto;
+  display: grid;
+  place-items: center;
+  padding: 38px;
+}
 .onboarding-panel-inner {
   width: min(480px, 100%);
   margin: auto;
@@ -581,46 +587,286 @@ img { max-width: 100%; }
 .profile-actions button { height: 42px; }
 
 .dark-mode .main-content { background: #0F172A; color: #E2E8F0; }
-.dark-mode .topbar, .dark-mode .top-profile, .dark-mode .card, .dark-mode .stat-card, .dark-mode .kpi-card, .dark-mode .mini-stat, .dark-mode .modal { border-color: #334155; background: #1E293B; color: #E2E8F0; }
-.dark-mode .field-label input, .dark-mode .field-label select, .dark-mode textarea { border-color: #334155; background: #0F172A; color: white; }
-
-.certificate-modal { width: min(700px, 100%); }
-.certificate { min-height: 480px; border: 8px double var(--eco); position: relative; padding: 38px; background: white; text-align: center; }
-.certificate-brand { display: flex; justify-content: center; }
-.certificate-brand img { height: 58px; }
-.certificate > p { margin-top: 35px; color: var(--muted); font-size: 11px; letter-spacing: .16em; }
-.certificate h2 { font-size: 26px; }
-.certificate > small { color: var(--muted); }
-.certificate-metrics { margin: 38px 0 25px; display: grid; grid-template-columns: repeat(3, 1fr); }
-.certificate-metrics div { border-right: 1px solid var(--border); display: grid; }
-.certificate-metrics div:last-child { border: 0; }
-.certificate-metrics strong { font-size: 20px; }
-.certificate-metrics span { color: var(--muted); font-size: 10px; }
-#qrcode { width: 100px !important; height: 100px !important; }
-.certificate-code { margin-top: 8px; color: var(--muted); font-size: 10px; }
-.certificate-close { position: absolute; right: 26px; }
-
-.toast-container { position: fixed; z-index: 3000; right: 20px; bottom: 20px; display: grid; gap: 8px; }
-.toast { min-width: 280px; border-radius: 10px; display: flex; align-items: center; gap: 9px; padding: 13px 15px; background: var(--conecta); color: white; box-shadow: var(--shadow); font-size: 12px; animation: toast-in .25s ease; }
-.toast svg { width: 17px; color: var(--eco); }
-@keyframes toast-in { from { opacity: 0; transform: translateY(8px); } }
-
-#residentBalance,
-#walletBalance,
-.coin-card strong,
-.wallet-hero h2 {
-  color: #F59E0B;
+.dark-mode .topbar, .dark-mode .top-profile, .dark-mode .card, .dark-mode .stat-card, .dark-mode .kpi-card, .dark-mode .mini-stat, .dark-mode .modal, .dark-mode .profile-modal, .dark-mode .onboarding-panel, .dark-mode .wallet-history > div, .dark-mode .mission-list > div, .dark-mode .financial-item, .dark-mode .report-item, .dark-mode .certificate {
+  color: #F8FAFC;
+}
+.dark-mode h1,
+.dark-mode h2,
+.dark-mode h3,
+.dark-mode strong,
+.dark-mode b,
+.dark-mode .profileName,
+.dark-mode .profileRole,
+.dark-mode .top-profile,
+.dark-mode .top-profile strong,
+.dark-mode .sidebar-profile strong,
+.dark-mode .collection-info strong,
+.dark-mode .call-info strong,
+.dark-mode .route-list strong,
+.dark-mode .wallet-hero h2,
+.dark-mode .stat-card strong,
+.dark-mode .kpi-card strong,
+.dark-mode .mini-stat strong,
+.dark-mode .certificate h2 {
+  color: #F8FAFC;
+}
+.dark-mode .eyebrow,
+.dark-mode .stat-card span,
+.dark-mode .stat-card small,
+.dark-mode .collection-info small,
+.dark-mode .mini-stat span,
+.dark-mode .call-info small,
+.dark-mode .route-list small,
+.dark-mode .route-list em,
+.dark-mode .kpi-card span,
+.dark-mode .kpi-card small,
+.dark-mode .field-label,
+.dark-mode .compliance-summary span,
+.dark-mode .invoice-preview,
+.dark-mode .validation-result,
+.dark-mode .gps-status,
+.dark-mode .checkbox-row,
+.dark-mode .stepper span,
+.dark-mode .terms-row,
+.dark-mode .back-auth,
+.dark-mode .profile-hero small,
+.dark-mode .setting-row small,
+.dark-mode .certificate > p,
+.dark-mode .certificate > small,
+.dark-mode .certificate-metrics span,
+.dark-mode .certificate-code,
+.dark-mode .mission-list small,
+.dark-mode .wallet-history small,
+.dark-mode .financial-item small,
+.dark-mode .report-item p,
+.dark-mode .report-item small,
+.dark-mode .onboarding-panel p,
+.dark-mode .role-card small {
+  color: #D8E0EA;
+}
+.dark-mode .module-tabs,
+.dark-mode .mobile-nav,
+.dark-mode .mobile-nav button,
+.dark-mode .module-tabs button {
+  background: #1E293B;
+  color: #CBD5E1;
+}
+.dark-mode .mobile-nav button.active,
+.dark-mode .module-tabs button.active {
+  background: #064E3B;
+  color: #86EFAC;
+}
+.dark-mode .secondary-button,
+.dark-mode .danger-outline-button,
+.dark-mode .text-button,
+.dark-mode .back-auth,
+.dark-mode .step-top button {
+  color: #F8FAFC;
+}
+.dark-mode .field-label input,
+.dark-mode .field-label select,
+.dark-mode .field-label textarea,
+.dark-mode input,
+.dark-mode select,
+.dark-mode textarea {
+  border-color: #475569;
+  background: #0F172A;
+  color: #F8FAFC;
+}
+.dark-mode input::placeholder,
+.dark-mode textarea::placeholder {
+  color: #94A3B8;
+  opacity: 1;
+}
+.dark-mode .certificate,
+.dark-mode .onboarding-panel,
+.dark-mode .modal,
+.dark-mode .profile-modal {
+  background: #1E293B;
+  border-color: #334155;
 }
 
-.wallet-hero h2 i,
-.wallet-hero h2 svg,
-.coin-card .stat-icon,
-.coin-card .stat-icon svg {
-  color: #F59E0B;
+/* CONTRASTE FINAL DO TEMA ESCURO */
+body.dark-mode,
+.dark-mode {
+  background: #0F172A !important;
+  color: #FFFFFF !important;
 }
 
-.coin-card {
-  border-color: #FDE68A;
+.dark-mode .app-shell,
+.dark-mode .main-content,
+.dark-mode .topbar,
+.dark-mode .sidebar,
+.dark-mode .card,
+.dark-mode .stat-card,
+.dark-mode .kpi-card,
+.dark-mode .mini-stat,
+.dark-mode .wallet-hero,
+.dark-mode .wallet-history > div,
+.dark-mode .mission-list > div,
+.dark-mode .financial-item,
+.dark-mode .report-item,
+.dark-mode .role-card,
+.dark-mode .modal,
+.dark-mode .profile-modal,
+.dark-mode .onboarding-panel,
+.dark-mode .certificate,
+.dark-mode .upload-zone,
+.dark-mode .invoice-preview,
+.dark-mode .summary-box,
+.dark-mode .mobile-nav,
+.dark-mode .module-tabs {
+  background: #1E293B !important;
+  color: #FFFFFF !important;
+  border-color: #475569 !important;
+}
+
+.dark-mode h1,
+.dark-mode h2,
+.dark-mode h3,
+.dark-mode h4,
+.dark-mode p,
+.dark-mode span,
+.dark-mode strong,
+.dark-mode b,
+.dark-mode small,
+.dark-mode em,
+.dark-mode label,
+.dark-mode .profileName,
+.dark-mode .profileRole,
+.dark-mode .eyebrow,
+.dark-mode .field-label,
+.dark-mode .terms-row,
+.dark-mode .setting-row,
+.dark-mode .setting-row small,
+.dark-mode .profile-hero small,
+.dark-mode .gps-status,
+.dark-mode .validation-result,
+.dark-mode .invoice-preview,
+.dark-mode .compliance-summary span,
+.dark-mode .certificate > p,
+.dark-mode .certificate > small,
+.dark-mode .certificate-metrics span,
+.dark-mode .certificate-code,
+.dark-mode .mission-list strong,
+.dark-mode .mission-list small,
+.dark-mode .wallet-history strong,
+.dark-mode .wallet-history small,
+.dark-mode .financial-item strong,
+.dark-mode .financial-item small,
+.dark-mode .report-item h3,
+.dark-mode .report-item p,
+.dark-mode .report-item small,
+.dark-mode .onboarding-panel p,
+.dark-mode .role-card strong,
+.dark-mode .role-card small,
+.dark-mode .step-top span,
+.dark-mode .step-top button,
+.dark-mode .back-auth,
+.dark-mode .checkbox-row {
+  color: #FFFFFF !important;
+}
+
+.dark-mode .eyebrow,
+.dark-mode .stat-card span,
+.dark-mode .stat-card small,
+.dark-mode .kpi-card span,
+.dark-mode .kpi-card small,
+.dark-mode .mini-stat span,
+.dark-mode .collection-info small,
+.dark-mode .call-info small,
+.dark-mode .route-list small,
+.dark-mode .route-list em,
+.dark-mode .wallet-hero p,
+.dark-mode .wallet-level small,
+.dark-mode .field-label,
+.dark-mode .terms-row,
+.dark-mode .setting-row small,
+.dark-mode .profile-hero small,
+.dark-mode .gps-status,
+.dark-mode .mission-list small,
+.dark-mode .wallet-history small,
+.dark-mode .financial-item small,
+.dark-mode .report-item p,
+.dark-mode .report-item small,
+.dark-mode .onboarding-panel p,
+.dark-mode .role-card small {
+  color: #E2E8F0 !important;
+}
+
+.dark-mode input,
+.dark-mode select,
+.dark-mode textarea,
+.dark-mode .password-field,
+.dark-mode .input-with-action,
+.dark-mode .field-label input,
+.dark-mode .field-label select,
+.dark-mode .field-label textarea {
+  background: #0F172A !important;
+  color: #FFFFFF !important;
+  border-color: #64748B !important;
+}
+
+.dark-mode input::placeholder,
+.dark-mode textarea::placeholder {
+  color: #CBD5E1 !important;
+  opacity: 1 !important;
+}
+
+.dark-mode .module-tabs,
+.dark-mode .module-tabs button,
+.dark-mode .mobile-nav,
+.dark-mode .mobile-nav button,
+.dark-mode .secondary-button,
+.dark-mode .danger-outline-button,
+.dark-mode .text-button,
+.dark-mode .icon-button,
+.dark-mode .top-profile {
+  background: #1E293B !important;
+  color: #FFFFFF !important;
+  border-color: #64748B !important;
+}
+
+.dark-mode .module-tabs button.active,
+.dark-mode .mobile-nav button.active,
+.dark-mode .role-card.selected,
+.dark-mode .nav-item.active {
+  background: #064E3B !important;
+  color: #86EFAC !important;
+  border-color: #10B981 !important;
+}
+
+.dark-mode svg,
+.dark-mode i,
+.dark-mode .icon-button svg,
+.dark-mode .module-tabs button svg,
+.dark-mode .mobile-nav button svg {
+  color: #A7F3D0 !important;
+}
+
+.dark-mode .primary-button,
+.dark-mode .onboarding-next {
+  background: #047857 !important;
+  color: #FFFFFF !important;
+}
+
+.dark-mode #residentBalance,
+.dark-mode #walletBalance,
+.dark-mode .coin-card strong,
+.dark-mode .wallet-hero h2 {
+  color: #FBBF24 !important;
+}
+
+.dark-mode .collection-item,
+.dark-mode .route-list > div,
+.dark-mode .summary-box,
+.dark-mode .summary-box div,
+.dark-mode .compliance-summary div,
+.dark-mode .certificate-metrics div,
+.dark-mode .setting-row,
+.dark-mode .profile-actions,
+.dark-mode .modal-actions {
+  border-color: #475569 !important;
 }
 
 @media (min-width: 761px) and (max-width: 1100px) {
@@ -636,6 +882,15 @@ img { max-width: 100%; }
 }
 
 @media (max-width: 760px) {
+  .sidebar { display: none; }
+  .app-shell { margin-left: 0; }
+  .collector-layout { grid-template-columns: minmax(0, 1fr); }
+  .wallet-grid,
+  .content-grid,
+  .management-grid { grid-template-columns: minmax(0, 1fr); }
+  .collector-stats,
+  .kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
   html,
   body {
     width: 100%;
@@ -709,7 +964,36 @@ img { max-width: 100%; }
   }
 
   .mobile-nav {
+    position: fixed;
+    bottom: 0;
     z-index: 900;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    min-height: 64px;
+    padding: 6px 8px calc(6px + env(safe-area-inset-bottom));
+    border-top: 1px solid var(--border);
+    background: var(--white);
+    box-shadow: 0 -8px 24px rgba(15, 23, 42, 0.08);
+  }
+
+  .mobile-nav button {
+    min-height: 48px;
+    border: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    padding: 4px;
+    background: transparent;
+    color: var(--muted);
+    font-size: 10px;
+    font-weight: 700;
+  }
+
+  .mobile-nav button svg {
+    width: 18px;
+    height: 18px;
   }
 
   .main-content {
@@ -745,6 +1029,7 @@ img { max-width: 100%; }
   }
 
   .resident-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     place-items: stretch;
   }
 
@@ -765,6 +1050,7 @@ img { max-width: 100%; }
   }
 
   .wallet-hero {
+    flex-direction: column;
     align-items: center;
     text-align: center;
   }
@@ -808,14 +1094,37 @@ img { max-width: 100%; }
 @media (max-width: 430px) {
   .topbar {
     justify-content: space-between;
+    gap: 6px;
+    padding-inline: 12px;
   }
 
   .topbar-actions {
     justify-content: flex-end;
+    gap: 6px;
+  }
+
+  .top-profile {
+    flex: 0 0 auto;
+    gap: 0;
+    padding: 0;
+  }
+
+  .top-profile span,
+  .top-profile > svg {
+    display: none;
   }
 
   .main-content {
     display: block;
+  }
+
+  .resident-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .collector-stats,
+  .kpi-grid {
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .page-heading {
@@ -917,18 +1226,184 @@ img { max-width: 100%; }
   }
 }
 
-.dark-mode .module-tabs button,
-.dark-mode .mobile-nav button,
-.dark-mode .onboarding-panel p,
-.dark-mode .role-card small,
+.dark-mode,
+body.dark-mode {
+  background: #0F172A !important;
+  color: #FFFFFF !important;
+}
+
+.dark-mode .app-shell,
+.dark-mode .main-content,
+.dark-mode .topbar,
+.dark-mode .sidebar,
+.dark-mode .card,
+.dark-mode .stat-card,
+.dark-mode .kpi-card,
+.dark-mode .mini-stat,
+.dark-mode .wallet-hero,
+.dark-mode .wallet-history > div,
+.dark-mode .mission-list > div,
+.dark-mode .financial-item,
+.dark-mode .report-item,
+.dark-mode .role-card,
+.dark-mode .modal,
+.dark-mode .profile-modal,
+.dark-mode .onboarding-panel,
+.dark-mode .certificate,
+.dark-mode .upload-zone,
+.dark-mode .invoice-preview,
+.dark-mode .summary-box,
+.dark-mode .mobile-nav,
+.dark-mode .module-tabs {
+  background: #1E293B !important;
+  color: #FFFFFF !important;
+  border-color: #475569 !important;
+}
+
+.dark-mode h1,
+.dark-mode h2,
+.dark-mode h3,
+.dark-mode h4,
+.dark-mode p,
+.dark-mode span,
+.dark-mode strong,
+.dark-mode b,
+.dark-mode small,
+.dark-mode em,
+.dark-mode label,
+.dark-mode .profileName,
+.dark-mode .profileRole,
+.dark-mode .eyebrow,
 .dark-mode .field-label,
 .dark-mode .terms-row,
+.dark-mode .setting-row,
+.dark-mode .setting-row small,
+.dark-mode .profile-hero small,
+.dark-mode .gps-status,
+.dark-mode .validation-result,
+.dark-mode .invoice-preview,
+.dark-mode .compliance-summary span,
+.dark-mode .certificate > p,
+.dark-mode .certificate > small,
+.dark-mode .certificate-metrics span,
+.dark-mode .certificate-code,
+.dark-mode .mission-list strong,
+.dark-mode .mission-list small,
+.dark-mode .wallet-history strong,
+.dark-mode .wallet-history small,
+.dark-mode .financial-item strong,
+.dark-mode .financial-item small,
+.dark-mode .report-item h3,
+.dark-mode .report-item p,
+.dark-mode .report-item small,
+.dark-mode .onboarding-panel p,
+.dark-mode .role-card strong,
+.dark-mode .role-card small,
+.dark-mode .step-top span,
+.dark-mode .step-top button,
 .dark-mode .back-auth,
-.dark-mode .step-top button {
-  color: #CBD5E1;
+.dark-mode .checkbox-row {
+  color: #FFFFFF !important;
+}
+
+.dark-mode .eyebrow,
+.dark-mode .stat-card span,
+.dark-mode .stat-card small,
+.dark-mode .kpi-card span,
+.dark-mode .kpi-card small,
+.dark-mode .mini-stat span,
+.dark-mode .collection-info small,
+.dark-mode .call-info small,
+.dark-mode .route-list small,
+.dark-mode .route-list em,
+.dark-mode .wallet-hero p,
+.dark-mode .wallet-level small,
+.dark-mode .field-label,
+.dark-mode .terms-row,
+.dark-mode .setting-row small,
+.dark-mode .profile-hero small,
+.dark-mode .gps-status,
+.dark-mode .mission-list small,
+.dark-mode .wallet-history small,
+.dark-mode .financial-item small,
+.dark-mode .report-item p,
+.dark-mode .report-item small,
+.dark-mode .onboarding-panel p,
+.dark-mode .role-card small {
+  color: #E2E8F0 !important;
+}
+
+.dark-mode input,
+.dark-mode select,
+.dark-mode textarea,
+.dark-mode .password-field,
+.dark-mode .input-with-action,
+.dark-mode .field-label input,
+.dark-mode .field-label select,
+.dark-mode .field-label textarea {
+  background: #0F172A !important;
+  color: #FFFFFF !important;
+  border-color: #64748B !important;
+}
+
+.dark-mode input::placeholder,
+.dark-mode textarea::placeholder {
+  color: #CBD5E1 !important;
+  opacity: 1 !important;
+}
+
+.dark-mode .module-tabs,
+.dark-mode .module-tabs button,
+.dark-mode .mobile-nav,
+.dark-mode .mobile-nav button,
+.dark-mode .secondary-button,
+.dark-mode .danger-outline-button,
+.dark-mode .text-button,
+.dark-mode .icon-button,
+.dark-mode .top-profile {
+  background: #1E293B !important;
+  color: #FFFFFF !important;
+  border-color: #64748B !important;
 }
 
 .dark-mode .module-tabs button.active,
-.dark-mode .mobile-nav button.active {
-  color: #86EFAC;
+.dark-mode .mobile-nav button.active,
+.dark-mode .role-card.selected,
+.dark-mode .nav-item.active {
+  background: #064E3B !important;
+  color: #86EFAC !important;
+  border-color: #10B981 !important;
+}
+
+.dark-mode svg,
+.dark-mode i,
+.dark-mode .icon-button svg,
+.dark-mode .module-tabs button svg,
+.dark-mode .mobile-nav button svg {
+  color: #A7F3D0 !important;
+}
+
+.dark-mode .primary-button,
+.dark-mode .onboarding-next {
+  background: #047857 !important;
+  color: #FFFFFF !important;
+}
+
+.dark-mode #residentBalance,
+.dark-mode #walletBalance,
+.dark-mode .coin-card strong,
+.dark-mode .wallet-hero h2 {
+  color: #FBBF24 !important;
+}
+
+.dark-mode .collection-item,
+.dark-mode .route-list > div,
+.dark-mode .summary-box,
+.dark-mode .summary-box div,
+.dark-mode .compliance-summary div,
+.dark-mode .certificate-metrics div,
+.dark-mode .setting-row,
+.dark-mode .profile-actions,
+.dark-mode .modal-actions {
+  border-color: #475569 !important;
 }
