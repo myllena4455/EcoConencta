@@ -8,7 +8,7 @@
   --page: #F8FAFC;
   --white: #FFFFFF;
   --border: #E2E8F0;
-  --muted: #64748B;
+  --muted: #475569;
   --shadow: 0 12px 32px rgba(15, 23, 42, 0.08);
 }
 
@@ -605,6 +605,24 @@ img { max-width: 100%; }
 .toast svg { width: 17px; color: var(--eco); }
 @keyframes toast-in { from { opacity: 0; transform: translateY(8px); } }
 
+#residentBalance,
+#walletBalance,
+.coin-card strong,
+.wallet-hero h2 {
+  color: #F59E0B;
+}
+
+.wallet-hero h2 i,
+.wallet-hero h2 svg,
+.coin-card .stat-icon,
+.coin-card .stat-icon svg {
+  color: #F59E0B;
+}
+
+.coin-card {
+  border-color: #FDE68A;
+}
+
 @media (min-width: 761px) and (max-width: 1100px) {
   .sidebar { width: 210px; }
   .app-shell { margin-left: 210px; }
@@ -673,15 +691,10 @@ img { max-width: 100%; }
   .auth-form input,
   .auth-form select,
   .auth-form textarea,
-  .password-field,
-  .onboarding-next {
-    max-width: 100%;
-  }
-
-  .auth-form input,
-  .auth-form select,
-  .auth-form textarea {
-    font-size: 16px;
+  .field-label input,
+  .field-label select,
+  .field-label textarea {
+    color: #0F172A;
   }
 
   .main-content,
@@ -706,90 +719,112 @@ img { max-width: 100%; }
   .call-actions {
     width: 100%;
   }
-}
 
-@media (min-width: 761px) {
-  .onboarding-panel {
-    height: 100vh;
-    height: 100dvh;
-    min-height: 0;
-    overflow-x: hidden;
-    overflow-y: auto !important;
-    overscroll-behavior: contain;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  .onboarding-panel-inner {
-    width: min(480px, calc(100% - 48px));
-    margin: auto;
-  }
-}
-
-@media print {
-  body > *:not(.modal-backdrop) { display: none !important; }
-  .modal-backdrop { position: static; display: flex !important; background: white; }
-  .certificate-modal { width: 100%; }
-  .certificate-modal > .close-modal, .certificate-modal > .primary-button { display: none; }
-  .certificate { border: 8px double var(--eco); }
-}
-
-@media (max-width: 760px) {
-  .sidebar {
-    width: min(280px, 82vw);
-    transform: translateX(-100%);
-    transition: transform .25s ease;
-    box-shadow: 20px 0 50px rgba(15, 23, 42, .25);
-  }
-
-  .sidebar.open {
-    transform: translateX(0);
-  }
-
-  .app-shell {
-    width: 100%;
-    max-width: 100%;
-    margin-left: 0;
-  }
-
-  .topbar {
-    width: 100%;
-    height: 62px;
-    padding: 0 12px;
-  }
-
-  .menu-button {
-    display: grid;
-    flex: 0 0 44px;
-  }
-
-  .location-chip,
-  .weather,
-  .top-profile {
-    display: none !important;
-  }
-
-  .topbar-actions {
-    margin-left: auto;
-  }
-
-  .topbar-actions .icon-button {
-    width: 44px;
-    height: 44px;
-  }
-
-  .main-content {
-    width: 100%;
-    max-width: 100%;
-    padding: 18px 12px calc(96px + env(safe-area-inset-bottom));
+  .page-heading,
+  .card-header,
+  .stat-card,
+  .wallet-hero,
+  .wallet-level,
+  .mission-list > div,
+  .wallet-history > div,
+  .financial-item,
+  .report-item {
+    box-sizing: border-box;
   }
 
   .page-heading {
-    width: 100%;
-    margin-bottom: 16px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-items: center;
+    text-align: left;
   }
 
-  .page-heading h1 {
-    font-size: 22px;
+  .page-heading > .primary-button,
+  .page-heading > .secondary-button {
+    width: 100%;
+  }
+
+  .resident-grid {
+    place-items: stretch;
+  }
+
+  .stat-card {
+    min-height: 104px;
+    align-items: center;
+  }
+
+  .stat-card > div:last-child {
+    min-width: 0;
+  }
+
+  .coin-card strong,
+  #residentBalance,
+  #walletBalance {
+    color: #F59E0B !important;
+    text-align: left;
+  }
+
+  .wallet-hero {
+    align-items: center;
+    text-align: center;
+  }
+
+  .wallet-hero h2 {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .wallet-level {
+    width: 100%;
+    text-align: center;
+  }
+
+  .wallet-level span {
+    margin-inline: auto;
+  }
+
+  .module-tabs {
+    position: sticky;
+    z-index: 850;
+    top: 62px;
+  }
+
+  .card-header {
+    align-items: center;
+  }
+
+  .mobile-nav {
+    width: 100%;
+    left: 0;
+    right: 0;
+    margin: 0;
+  }
+
+  .mobile-nav button {
+    min-width: 0;
+  }
+}
+
+@media (max-width: 430px) {
+  .topbar {
+    justify-content: space-between;
+  }
+
+  .topbar-actions {
+    justify-content: flex-end;
+  }
+
+  .main-content {
+    display: block;
+  }
+
+  .page-heading {
+    text-align: center;
+  }
+
+  .page-heading > div,
+  .page-heading > button {
+    width: 100%;
   }
 
   .resident-grid,
@@ -799,109 +834,101 @@ img { max-width: 100%; }
   .content-grid,
   .management-grid,
   .collector-layout {
-    width: 100%;
-    max-width: 100%;
-    grid-template-columns: 1fr !important;
-  }
-
-  .stat-card,
-  .mini-stat,
-  .kpi-card,
-  .card,
-  .wallet-hero {
-    width: 100%;
-    max-width: 100%;
-  }
-
-  .resident-grid .stat-card:last-child {
-    grid-column: auto;
+    margin-inline: 0;
   }
 
   .module-tabs {
-    width: 100%;
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    border-radius: 10px;
   }
 
   .module-tabs button {
-    min-width: 0;
-    height: 58px;
-    justify-content: center;
-    flex-direction: column;
-    gap: 3px;
-    padding: 6px 4px;
-    text-align: center;
-    white-space: normal;
-    line-height: 1.05;
+    font-size: 10px;
   }
 
-  .module-tabs button svg {
-    width: 18px;
-  }
-
-  .card-header {
-    gap: 8px;
-  }
-
-  .card-header .secondary-button,
-  .card-header .text-button {
-    max-width: 48%;
-  }
-
-  .map-card #map,
-  #collectorMap {
-    height: 280px;
-  }
-
-  .collector-layout > *,
-  .collector-layout > div,
-  .content-grid > *,
-  .management-grid > *,
-  .wallet-grid > * {
-    min-width: 0;
-  }
-
-  .collection-item {
-    grid-template-columns: 42px minmax(0, 1fr);
-  }
-
-  .collection-status {
-    grid-column: 2;
-    text-align: left;
-  }
-
-  .call-item {
+  .stat-card {
+    display: grid;
     grid-template-columns: 44px minmax(0, 1fr);
   }
 
-  .call-actions {
-    grid-column: 1 / -1;
+  .stat-card .stat-icon {
+    margin: 0;
   }
 
-  .call-actions button {
-    height: 44px;
+  .stat-card > div:last-child {
+    justify-self: start;
   }
 
-  .financial-item,
-  .wallet-history > div,
-  .mission-list > div,
-  .report-item {
+  .coin-card strong {
+    font-size: 21px;
+  }
+
+  .card-header {
+    width: 100%;
+  }
+
+  .card-header > div {
     min-width: 0;
   }
 
-  .financial-item strong,
-  .financial-item small,
-  .wallet-history strong,
-  .wallet-history small,
-  .mission-list strong,
-  .mission-list small,
-  .report-item h3,
-  .report-item p,
-  .report-item small {
+  .card-header h2,
+  .card-header .eyebrow {
     overflow-wrap: anywhere;
   }
 
-  .mobile-nav {
-    height: calc(68px + env(safe-area-inset-bottom));
+  .wallet-hero h2 {
+    flex-wrap: wrap;
   }
+}
+
+@media (max-width: 760px) {
+  .module-tabs button {
+    color: #475569;
+    font-weight: 800;
+  }
+
+  .module-tabs button.active {
+    color: #047857;
+  }
+
+  .mobile-nav button {
+    color: #475569;
+  }
+
+  .mobile-nav button.active {
+    color: #047857;
+  }
+
+  .onboarding-panel p,
+  .role-card small,
+  .field-label,
+  .terms-row,
+  .back-auth,
+  .step-top button {
+    color: #475569;
+  }
+
+  .auth-form input,
+  .auth-form select,
+  .auth-form textarea,
+  .field-label input,
+  .field-label select,
+  .field-label textarea {
+    color: #0F172A;
+  }
+}
+
+.dark-mode .module-tabs button,
+.dark-mode .mobile-nav button,
+.dark-mode .onboarding-panel p,
+.dark-mode .role-card small,
+.dark-mode .field-label,
+.dark-mode .terms-row,
+.dark-mode .back-auth,
+.dark-mode .step-top button {
+  color: #CBD5E1;
+}
+
+.dark-mode .module-tabs button.active,
+.dark-mode .mobile-nav button.active {
+  color: #86EFAC;
 }
