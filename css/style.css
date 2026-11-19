@@ -24,7 +24,9 @@ body {
   font-family: "Inter", sans-serif;
 }
 
-body.auth-pending { overflow: hidden; }
+body.auth-pending {
+  overflow: hidden;
+}
 
 button, input, select, textarea, .role-card { touch-action: manipulation; }
 button { cursor: pointer; min-height: 44px; }
@@ -518,7 +520,11 @@ img { max-width: 100%; }
 .onboarding-benefits span { height: 38px; border: 1px solid rgba(255,255,255,.12); border-radius: 20px; display: flex; align-items: center; gap: 7px; padding: 0 12px; font-size: 11px; }
 .onboarding-benefits svg { width: 15px; color: var(--eco); }
 .onboarding-panel { display: grid; place-items: center; padding: 38px; }
-.onboarding-panel-inner { width: min(480px, 100%); margin: auto; }
+.onboarding-panel-inner {
+  width: min(480px, 100%);
+  margin: auto;
+  padding: 24px 0;
+}
 .step-top { margin-bottom: 25px; display: flex; align-items: center; justify-content: space-between; }
 .step-top span { color: var(--eco); font-size: 10px; font-weight: 800; letter-spacing: .12em; }
 .step-top button { border: 0; background: none; color: var(--conecta); font-size: 12px; font-weight: 700; }
@@ -537,7 +543,11 @@ img { max-width: 100%; }
 .onboarding-next { width: 100%; height: 48px; margin-top: 18px; }
 .back-auth { margin-bottom: 18px; border: 0; display: flex; align-items: center; gap: 5px; padding: 0; background: none; color: var(--muted); font-size: 12px; }
 .back-auth svg { width: 16px; }
-.auth-form { display: grid; }
+.auth-form {
+  display: grid;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
 .auth-form .field-label { margin: 8px 0; }
 .password-field { display: flex !important; align-items: center; border: 1px solid var(--border); border-radius: 9px; }
 .password-field input { border: 0 !important; }
@@ -608,134 +618,111 @@ img { max-width: 100%; }
 }
 
 @media (max-width: 760px) {
-  html, body { width: 100%; overflow-x: hidden; }
-  body { min-width: 320px; }
+  html,
+  body {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  body.auth-pending {
+    overflow: hidden;
+  }
 
   .onboarding {
+    position: fixed;
+    inset: 0;
+    display: block;
+    width: 100%;
     height: 100vh;
     height: 100dvh;
-    display: block;
-    overflow-y: auto;
-    overscroll-behavior: contain;
+    overflow: hidden;
   }
 
   .onboarding-art {
-    height: 190px;
-    min-height: 190px;
-    padding: 18px 16px;
+    display: none !important;
   }
 
-  .onboarding-brand img { height: 54px; }
-  .onboarding-copy h1 { font-size: 24px; }
-  .onboarding-tag { font-size: 9px; }
-
   .onboarding-panel {
-    min-height: calc(100vh - 190px);
-    min-height: calc(100dvh - 190px);
+    width: 100%;
+    height: 100vh;
+    height: 100dvh;
+    min-height: 0;
     display: block;
-    overflow: visible;
+    overflow-x: hidden;
+    overflow-y: auto !important;
     padding: 20px 16px calc(28px + env(safe-area-inset-bottom));
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
   }
 
   .onboarding-panel-inner {
     width: 100%;
+    min-height: 100%;
     margin: 0 auto;
+    padding: 0 0 40px;
   }
 
-  .role-card {
-    min-height: 104px;
-  }
-
+  .role-grid,
+  .auth-form,
+  .auth-form .field-label,
   .onboarding-next {
-    height: 48px;
-    margin-bottom: 4px;
-  }
-
-  .modal-backdrop {
-    align-items: flex-start;
-    padding: 10px;
-  }
-
-  .modal {
-    width: 100%;
-    max-height: calc(100vh - 20px);
-    max-height: calc(100dvh - 20px);
-    margin: auto 0;
-  }
-
-  .modal-actions {
-    bottom: -22px;
-  }
-
-  .modal-actions button,
-  .profile-actions button,
-  .primary-button.full-button,
-  .secondary-button.full-button {
-    min-height: 48px;
-  }
-
-  .page-heading {
-    align-items: flex-start;
-    gap: 12px;
-  }
-
-  .page-heading > .primary-button,
-  .page-heading > .secondary-button,
-  .page-heading > div:last-child {
     width: 100%;
   }
 
-  .page-heading > div:last-child button {
-    flex: 1 1 140px;
+  .auth-form input,
+  .auth-form select,
+  .auth-form textarea,
+  .password-field,
+  .onboarding-next {
+    max-width: 100%;
   }
 
-  .topbar-actions {
-    margin-left: auto;
+  .auth-form input,
+  .auth-form select,
+  .auth-form textarea {
+    font-size: 16px;
   }
 
-  .two-columns,
-  .waste-grid,
-  .compliance-summary,
-  .certificate-metrics {
-    grid-template-columns: 1fr;
+  .main-content,
+  .module,
+  .collector-layout,
+  #collectorOverview,
+  #collectorWallet,
+  #collectorReports {
+    height: auto;
+    max-width: 100%;
+    overflow: visible;
   }
-
-  .waste-grid label span {
-    min-height: 84px;
-  }
-
-  .profile-actions {
-    position: sticky;
-    z-index: 4;
-    bottom: -22px;
-    margin: 16px -22px -22px;
-    padding: 12px 22px calc(12px + env(safe-area-inset-bottom));
-    background: white;
-  }
-
-  .dark-mode .modal-actions,
-  .dark-mode .profile-actions { background: #1E293B; }
 
   .mobile-nav {
-    height: calc(68px + env(safe-area-inset-bottom));
-    padding-bottom: env(safe-area-inset-bottom);
+    z-index: 900;
   }
 
-  .toast-container {
-    bottom: calc(80px + env(safe-area-inset-bottom));
+  .main-content {
+    padding-bottom: calc(100px + env(safe-area-inset-bottom));
+  }
+
+  .call-actions {
+    width: 100%;
   }
 }
 
-@media (max-width: 430px) {
-  .onboarding-art { height: 168px; min-height: 168px; }
-  .onboarding-panel { min-height: calc(100vh - 168px); min-height: calc(100dvh - 168px); }
-  .onboarding-copy h1 { font-size: 21px; }
-  .role-card { grid-template-columns: 50px 1fr; }
-  .role-icon { width: 50px; height: 50px; }
-  .modal { border-radius: 12px; }
-  .stepper { grid-template-columns: 1fr; }
-  .stepper span { border-bottom-width: 2px; }
-  .profile-actions button { width: 100%; }
+@media (min-width: 761px) {
+  .onboarding-panel {
+    height: 100vh;
+    height: 100dvh;
+    min-height: 0;
+    overflow-x: hidden;
+    overflow-y: auto !important;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .onboarding-panel-inner {
+    width: min(480px, calc(100% - 48px));
+    margin: auto;
+  }
 }
 
 @media print {

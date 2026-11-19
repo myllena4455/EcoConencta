@@ -632,6 +632,9 @@ function showRegistrationStep(step) {
     $('#registrationTitle').textContent = `Criar conta de ${roleLabels[selectedRole].toLowerCase()}`;
     updateRegistrationFieldsByRole();
   }
+  const onboardingPanel = $('.onboarding-panel');
+  if (onboardingPanel) onboardingPanel.scrollTo({ top: 0, behavior: 'smooth' });
+
   lucide.createIcons();
 }
 
