@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#10B981">
+  <meta http-equiv="Content-Language" content="pt-BR">
+  <meta name="language" content="Portuguese">
+  <title>EcoConecta — Recife Sustentável</title>
+  <link rel="icon" type="image/png" href="logo do appp tema claro.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.4/build/qrcode.min.js"></script>
+</head>
+<body>
+  <div class="onboarding" id="onboarding">
+    <div class="onboarding-art">
+      <div class="onboarding-brand">
+        <img src="logo.png" alt="EcoConecta">
+      </div>
+      <div class="onboarding-copy">
+        <span class="onboarding-tag">RECIFE MAIS LIMPA • RECIFE MAIS SEGURA</span>
+        <h1>Conecte seu papel na <em>economia circular.</em></h1>
+        <p>Agende coletas, encontre PEVs, receba Moedas Verdes e ajude a prevenir alagamentos na sua cidade.</p>
+        <div class="onboarding-benefits"><span><i data-lucide="coins"></i> Recompensas</span><span><i data-lucide="map-pin"></i> Localização</span><span><i data-lucide="shield-check"></i> Rastreamento</span></div>
+      </div>
+    </div>
+    <div class="onboarding-panel">
+      <div class="onboarding-panel-inner">
+        <div class="step-top"><span id="authStepLabel">COMECE AGORA</span><button type="button" id="existingAccountButton">Já tenho conta</button></div>
+        <div id="roleStep">
+          <h2>Como você vai usar o EcoConecta?</h2>
+          <p>Escolha o perfil que melhor representa você.</p>
+          <div class="role-grid">
+            <button class="role-card selected" data-role="resident">
+              <span class="role-icon green"><i data-lucide="house-heart"></i></span>
+              <strong>Morador</strong><small>Agende coleta, ganhe moedas e acompanhe impactos.</small><b><i data-lucide="check"></i></b>
+            </button>
+            <button class="role-card" data-role="collector">
+              <span class="role-icon blue"><i data-lucide="recycle"></i></span>
+              <strong>Catador / Cooperativa</strong><small>Aceite chamados, otimize rotas e valide coletas.</small><b><i data-lucide="check"></i></b>
+            </button>
+            <button class="role-card" data-role="management">
+              <span class="role-icon amber"><i data-lucide="building-2"></i></span>
+              <strong>Empresa / Gestão</strong><small>Gerencie indicadores, compliance e certificados.</small><b><i data-lucide="check"></i></b>
+            </button>
+          </div>
+          <button class="primary-button onboarding-next" id="continueRegistration">Continuar <i data-lucide="arrow-right"></i></button>
+        </div>
+
+        <div id="registrationStep" hidden>
+          <button class="back-auth" id="backToRoles"><i data-lucide="arrow-left"></i> Voltar</button>
+          <h2 id="registrationTitle">Criar conta de morador</h2>
+          <p>Preencha seus dados para começar.</p>
+          <form id="registrationForm" class="auth-form">
+            <label class="field-label" id="nameField">Nome completo<input id="fullNameInput" type="text" placeholder="Como devemos chamar você?" required></label>
+            <label class="field-label" id="entityField" hidden>Nome da empresa ou cooperativa<input id="entityNameInput" type="text" placeholder="Razão social ou nome do estabelecimento"></label>
+            <label class="field-label">E-mail ou telefone<input id="emailInput" type="text" placeholder="email@exemplo.com" required></label>
+            <label class="field-label">Senha<div class="password-field"><input id="passwordInput" type="password" placeholder="Mínimo 6 caracteres" minlength="6" required><button type="button" id="togglePassword" aria-label="Mostrar senha"><i data-lucide="eye"></i></button></div></label>
+            <label class="terms-row"><input type="checkbox" id="termsInput" required><span>Li e aceito os <a href="#">Termos de Uso</a> e a <a href="#">Política de Privacidade</a>.</span></label>
+            <button class="primary-button onboarding-next" type="submit">Criar minha conta <i data-lucide="arrow-right"></i></button>
+          </form>
+        </div>
+
+        <div id="loginStep" hidden>
+          <button class="back-auth" id="backToRolesFromLogin"><i data-lucide="arrow-left"></i> Voltar</button>
+          <h2>Entrar no EcoConecta</h2><p>Acesse sua conta e continue de onde parou.</p>
+          <form id="loginForm" class="auth-form">
+            <label class="field-label">E-mail ou telefone<input type="text" placeholder="email@exemplo.com" required></label>
+            <label class="field-label">Senha<div class="password-field"><input type="password" placeholder="Sua senha" minlength="6" required><button type="button" aria-label="Mostrar senha"><i data-lucide="eye"></i></button></div></label>
+            <button class="text-button forgot-password" type="button">Esqueci minha senha</button>
+            <button class="primary-button onboarding-next" type="submit">Entrar <i data-lucide="arrow-right"></i></button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <aside class="sidebar" id="sidebar">
+    <a class="brand" href="#" aria-label="EcoConecta">
+      <img class="brand-logo" src="logo do aplicativo toma escuro.png" alt="EcoConecta">
+    </a>
+    <nav class="side-nav" aria-label="Módulos">
+      <button class="nav-item active" data-module="resident"><i data-lucide="home"></i><span>Morador</span></button>
+      <button class="nav-item" data-module="collector"><i data-lucide="recycle"></i><span>Catador</span></button>
+      <button class="nav-item" data-module="management"><i data-lucide="building-2"></i><span>Gestão</span></button>
+    </nav>
+    <button class="sidebar-profile open-profile" type="button">
+      <div class="avatar">AR</div>
+      <div><strong class="profileName">Ana Ribeiro</strong><small class="profileRole">Moradora • Recife</small></div>
+      <i data-lucide="settings"></i>
+    </button>
+  </aside>
+
+  <div class="app-shell">
+    <header class="topbar">
+      <button class="icon-button menu-button" id="menuButton" aria-label="Abrir menu"><i data-lucide="menu"></i></button>
+      <div class="location-chip"><i data-lucide="map-pin"></i><span>Recife, PE</span></div>
+      <div class="topbar-actions">
+        <button class="icon-button" id="notificationButton" aria-label="Notificações"><i data-lucide="bell"></i><span class="notification-dot"></span></button>
+        <div class="weather"><i data-lucide="cloud-sun"></i><strong>29°</strong></div>
+      </div>
+      <button class="top-profile open-profile" type="button" aria-label="Abrir perfil">
+        <div class="avatar">AR</div>
+        <span><strong class="profileName">Ana Ribeiro</strong><small class="profileRole">Moradora</small></span>
+        <i data-lucide="chevron-down"></i>
+      </button>
+    </header>
+
+    <main class="main-content">
+      <section class="module active" id="residentModule">
+        <div class="page-heading">
+          <div><p class="eyebrow">VISÃO DO MORADOR</p><h1>Olá, Ana! <span>🌿</span></h1></div>
+          <button class="primary-button" id="openWizard"><i data-lucide="plus"></i> Agendar coleta</button>
+        </div>
+
+        <div class="dashboard-grid resident-grid">
+          <article class="stat-card coin-card">
+            <div class="stat-icon amber"><i data-lucide="circle-dollar-sign"></i></div>
+            <div><span>Moedas Verdes</span><strong id="residentBalance">1.240</strong><small>≈ R$ 124,00 em recompensas</small></div>
+          </article>
+          <article class="stat-card">
+            <div class="stat-icon green"><i data-lucide="scale"></i></div>
+            <div><span>Impacto reciclado</span><strong id="recycledKg">86 kg</strong><small>+12 kg este mês</small></div>
+          </article>
+          <article class="stat-card">
+            <div class="stat-icon blue"><i data-lucide="truck"></i></div>
+            <div><span>Próxima coleta</span><strong>Hoje, 14h</strong><small class="status-text"><span></span> Catador a 20 min</small></div>
+          </article>
+        </div>
+
+        <div class="content-grid">
+          <article class="card map-card">
+            <div class="card-header">
+              <div><p class="eyebrow">MAPA DE COLETA</p><h2>Pontos próximos</h2></div>
+              <button class="secondary-button" id="locateMe"><i data-lucide="crosshair"></i><span>Minha localização</span></button>
+            </div>
+            <div id="map" aria-label="Mapa interativo de pontos de coleta"></div>
+          </article>
+
+          <article class="card collections-card">
+            <div class="card-header"><div><p class="eyebrow">ACOMPANHAMENTO</p><h2>Minhas coletas</h2></div><button class="text-button" id="viewAllCollections">Ver tudo</button></div>
+            <div class="collection-list" id="collectionList"></div>
+          </article>
+        </div>
+      </section>
+
+      <section class="module" id="collectorModule">
+        <div class="page-heading">
+          <div><p class="eyebrow">PAINEL OPERACIONAL</p><h1>Chamados de coleta</h1></div>
+          <label class="offline-toggle"><span><i data-lucide="wifi-off"></i> Modo offline</span><input type="checkbox" id="offlineToggle"><b></b></label>
+        </div>
+
+        <div class="collector-layout">
+          <div>
+            <div class="dashboard-grid collector-stats">
+              <article class="mini-stat"><span>Aguardando aceite</span><strong id="pendingCount">4</strong></article>
+              <article class="mini-stat"><span>Em rota hoje</span><strong>7</strong></article>
+              <article class="mini-stat"><span>Concluídas</span><strong>18</strong></article>
+            </div>
+            <div class="card">
+              <div class="card-header"><div><p class="eyebrow">PRIORIDADE</p><h2>Chamados disponíveis</h2></div><button class="secondary-button" id="poolButton"><i data-lucide="route"></i> Pool de Bairro</button></div>
+              <div class="calls-list" id="callsList"></div>
+            </div>
+          </div>
+          <aside class="card route-card">
+            <div class="card-header"><div><p class="eyebrow">OTIMIZAÇÃO</p><h2>Minha rota</h2></div><span class="route-badge">5 paradas</span></div>
+            <div class="route-list">
+              <div><b>1</b><span><strong>Boa Viagem, 812</strong><small>Plástico • 8 kg</small></span><em>14:00</em></div>
+              <div><b>2</b><span><strong>Rua Bruno Veloso</strong><small>Papel • 5 kg</small></span><em>14:35</em></div>
+              <div><b>3</b><span><strong>Imbiribeira</strong><small>Eletrônicos • 3 kg</small></span><em>15:10</em></div>
+            </div>
+            <button class="danger-outline-button" id="openReport"><i data-lucide="siren"></i> Nova denúncia ambiental</button>
+          </aside>
+        </div>
+      </section>
+
+      <section class="module" id="managementModule">
+        <div class="page-heading">
+          <div><p class="eyebrow">GESTÃO B2B • PREFEITURA</p><h1>Centro de inteligência</h1></div>
+          <button class="secondary-button" id="exportReport"><i data-lucide="download"></i> Exportar relatório</button>
+        </div>
+
+        <div class="kpi-grid">
+          <article class="kpi-card"><div class="kpi-icon green"><i data-lucide="weight"></i></div><div><span>Toneladas recuperadas</span><strong>248,6 t</strong><small><b>↑ 18%</b> vs. mês anterior</small></div></article>
+          <article class="kpi-card"><div class="kpi-icon red"><i data-lucide="waves"></i></div><div><span>Pontos críticos evitados</span><strong>37</strong><small><b>↑ 9</b> este trimestre</small></div></article>
+          <article class="kpi-card"><div class="kpi-icon blue"><i data-lucide="users"></i></div><div><span>Catadores ativos</span><strong>312</strong><small><b>94%</b> com rotas validadas</small></div></article>
+          <article class="kpi-card"><div class="kpi-icon amber"><i data-lucide="coins"></i></div><div><span>Moedas circulando</span><strong>186 mil</strong><small><b>R$ 18,6 mil</b> em recompensas</small></div></article>
+        </div>
+
+        <div class="management-grid">
+          <article class="card invoice-card">
+            <div class="card-header"><div><p class="eyebrow">COMPLIANCE</p><h2>Validador de Nota Fiscal</h2></div><span class="secure-badge"><i data-lucide="shield-check"></i> SHA-256</span></div>
+            <label class="upload-zone" id="invoiceZone"><input type="file" id="invoiceFile" accept="image/*,.pdf"><i data-lucide="file-up"></i><strong>Enviar Nota Fiscal</strong><span>Imagem ou PDF • até 10 MB</span></label>
+            <div class="invoice-preview" id="invoicePreview"><span>Ou simular leitura com dados da nota</span></div>
+            <button class="primary-button full-button" id="validateInvoice"><i data-lucide="scan-line"></i> Validar com OCR/IA</button>
+            <div class="validation-result" id="validationResult"></div>
+          </article>
+
+          <article class="card report-card">
+            <div class="card-header"><div><p class="eyebrow">PNRS • ESG</p><h2>Laudo Socioambiental</h2></div></div>
+            <label class="field-label">Empresa ou condomínio parceiro
+              <select id="partnerSelect"><option value="Condomínio Atlântico Recife">Condomínio Atlântico Recife</option><option value="Grupo Empresarial Boa Viagem">Grupo Empresarial Boa Viagem</option><option value="Shopping Recife Sustentável">Shopping Recife Sustentável</option></select>
+            </label>
+            <div class="compliance-summary"><div><span>Conformidade</span><strong>98%</strong></div><div><span>Coletas validadas</span><strong>156</strong></div><div><span>Período</span><strong>Nov/2026</strong></div></div>
+            <button class="secondary-button full-button" id="generateReport"><i data-lucide="badge-check"></i> Gerar laudo rastreável</button>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <nav class="mobile-nav" aria-label="Navegação mobile">
+      <button class="active" data-module="resident"><i data-lucide="home"></i><span>Morador</span></button>
+      <button data-module="collector"><i data-lucide="recycle"></i><span>Catador</span></button>
+      <button data-module="management"><i data-lucide="building-2"></i><span>Gestão</span></button>
+    </nav>
+  </div>
+
+  <div class="modal-backdrop" id="wizardModal" role="dialog" aria-modal="true" aria-labelledby="wizardTitle">
+    <div class="modal wizard-modal">
+      <div class="modal-header"><div><p class="eyebrow">NOVA SOLICITAÇÃO</p><h2 id="wizardTitle">Agendar coleta</h2></div><button class="icon-button close-modal" aria-label="Fechar"><i data-lucide="x"></i></button></div>
+      <div class="stepper"><span class="active"><b>1</b> Resíduo</span><span><b>2</b> Local</span><span><b>3</b> Confirmar</span></div>
+      <div class="wizard-step active" data-step="1">
+        <h3>O que será reciclado?</h3>
+        <div class="waste-grid">
+          <label><input type="radio" name="waste" value="Plástico" checked><span><i data-lucide="package"></i><b>Plástico</b></span></label>
+          <label><input type="radio" name="waste" value="Papel"><span><i data-lucide="newspaper"></i><b>Papel</b></span></label>
+          <label><input type="radio" name="waste" value="Vidro"><span><i data-lucide="wine"></i><b>Vidro</b></span></label>
+          <label><input type="radio" name="waste" value="Metal"><span><i data-lucide="cog"></i><b>Metal</b></span></label>
+          <label><input type="radio" name="waste" value="Eletrônicos"><span><i data-lucide="laptop"></i><b>Eletrônicos</b></span></label>
+        </div>
+        <label class="field-label">Estimativa de peso
+          <div class="range-row"><input type="range" id="weightRange" min="1" max="50" value="8"><strong id="weightValue">8 kg</strong></div>
+        </label>
+      </div>
+      <div class="wizard-step" data-step="2">
+        <h3>Quando e onde?</h3>
+        <label class="field-label">Endereço em Recife
+          <div class="input-with-action"><i data-lucide="map-pin"></i><input id="addressInput" value="Rua Setúbal, 812 — Boa Viagem"><button type="button" id="wizardGps"><i data-lucide="crosshair"></i></button></div>
+        </label>
+        <div class="two-columns"><label class="field-label">Data<input type="date" id="dateInput"></label><label class="field-label">Turno<select id="shiftInput"><option>Manhã • 08h–12h</option><option>Tarde • 13h–17h</option><option>Noite • 18h–21h</option></select></label></div>
+      </div>
+      <div class="wizard-step" data-step="3">
+        <h3>Confirme os dados</h3>
+        <div class="summary-box" id="wizardSummary"></div>
+        <label class="checkbox-row"><input type="checkbox" checked> Confirmo que os materiais estão separados e limpos.</label>
+      </div>
+      <div class="modal-actions"><button class="secondary-button" id="wizardBack" disabled>Voltar</button><button class="primary-button" id="wizardNext">Continuar <i data-lucide="arrow-right"></i></button></div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="reportModal" role="dialog" aria-modal="true">
+    <div class="modal">
+      <div class="modal-header"><div><p class="eyebrow">ALERTA AMBIENTAL</p><h2>Nova denúncia</h2></div><button class="icon-button close-modal" aria-label="Fechar"><i data-lucide="x"></i></button></div>
+      <label class="upload-zone photo-zone"><input type="file" id="reportPhoto" accept="image/*"><div id="photoPreview"><i data-lucide="camera"></i><strong>Adicionar foto</strong><span>Obrigatório para validar a ocorrência</span></div></label>
+      <label class="field-label">Descrição do foco
+        <textarea id="reportDescription" rows="4" placeholder="Ex.: Entupimento de bueiro com descarte irregular..."></textarea>
+      </label>
+      <button class="secondary-button full-button" id="captureReportGps"><i data-lucide="crosshair"></i> Capturar coordenadas GPS</button>
+      <p class="gps-status" id="gpsStatus">Localização ainda não capturada</p>
+      <button class="primary-button full-button" id="submitReport"><i data-lucide="send"></i> Enviar denúncia</button>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="ratingModal" role="dialog" aria-modal="true">
+    <div class="modal rating-modal">
+      <div class="modal-header"><div><p class="eyebrow">AVALIAÇÃO</p><h2>Como foi a coleta?</h2></div><button class="icon-button close-modal" aria-label="Fechar"><i data-lucide="x"></i></button></div>
+      <div class="stars" id="stars"><button data-rating="1">★</button><button data-rating="2">★</button><button data-rating="3">★</button><button data-rating="4">★</button><button data-rating="5">★</button></div>
+      <textarea id="ratingComment" rows="4" placeholder="Conte como foi o atendimento..."></textarea>
+      <button class="primary-button full-button" id="submitRating">Enviar avaliação</button>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="certificateModal" role="dialog" aria-modal="true">
+    <div class="modal certificate-modal">
+      <button class="icon-button close-modal certificate-close" aria-label="Fechar"><i data-lucide="x"></i></button>
+      <article class="certificate" id="certificate">
+        <div class="certificate-brand"><img src="logo.png" alt="EcoConecta"></div>
+        <p>CERTIFICADO SOCIOAMBIENTAL</p><h2 id="certificatePartner">Condomínio Atlântico Recife</h2>
+        <small>Programa de Gestão de Resíduos Sólidos • PNRS / Lei 12.305</small>
+        <div class="certificate-metrics"><div><strong>8.420 kg</strong><span>reciclados</span></div><div><strong>156</strong><span>coletas</span></div><div><strong>98%</strong><span>conformidade</span></div></div>
+        <canvas id="qrcode"></canvas>
+        <div class="certificate-code">ID <span id="certificateCode">EC-2026-000000</span></div>
+      </article>
+      <button class="primary-button full-button" id="printCertificate"><i data-lucide="printer"></i> Imprimir certificado</button>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="profileModal" role="dialog" aria-modal="true">
+    <div class="modal profile-modal">
+      <div class="modal-header"><div><p class="eyebrow">CONFIGURAÇÕES DA CONTA</p><h2>Meu perfil</h2></div><button class="icon-button close-modal" aria-label="Fechar"><i data-lucide="x"></i></button></div>
+      <div class="profile-hero"><label class="profile-photo"><input type="file" id="profilePhotoInput" accept="image/*"><span id="profilePhotoPreview"><b class="profileInitials">AR</b></span><em><i data-lucide="camera"></i></em></label><div><strong class="profileName">Ana Ribeiro</strong><small id="profileRoleModal">Moradora • Recife</small></div></div>
+      <div class="settings-section"><h3>Informações pessoais</h3><div class="two-columns"><label class="field-label">Nome<input id="profileNameInput" type="text" value="Ana Ribeiro"></label><label class="field-label">Telefone<input id="profilePhoneInput" type="tel" value="(81) 99999-0000"></label></div><label class="field-label">E-mail<input id="profileEmailInput" type="email" value="ana.ribeiro@email.com"></label><label class="field-label">Endereço principal<input id="profileAddressInput" type="text" value="Rua Setúbal, 812 — Boa Viagem"></label></div>
+      <div class="settings-section"><h3>Preferências</h3><label class="setting-row"><span><i data-lucide="bell"></i><b>Notificações</b><small>Status de coleta e alertas ambientais</small></span><input type="checkbox" checked></label><label class="setting-row"><span><i data-lucide="moon"></i><b>Tema escuro</b><small>Preferência visual do aplicativo</small></span><input type="checkbox" id="darkModeToggle"></label><label class="setting-row"><span><i data-lucide="map-pin"></i><b>Localização precisa</b><small>Melhora recomendações e rotas</small></span><input type="checkbox" checked></label></div>
+      <div class="profile-actions"><button class="danger-outline-button" id="logoutButton"><i data-lucide="log-out"></i> Sair da conta</button><button class="primary-button" id="saveProfile"><i data-lucide="save"></i> Salvar alterações</button></div>
+    </div>
+  </div>
+
+  <div class="toast-container" id="toastContainer"></div>
+  <script src="js/script.js"></script>
+</body>
+</html>
