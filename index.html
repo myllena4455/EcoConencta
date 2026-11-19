@@ -56,14 +56,18 @@
         <div id="registrationStep" hidden>
           <button class="back-auth" id="backToRoles"><i data-lucide="arrow-left"></i> Voltar</button>
           <h2 id="registrationTitle">Criar conta de morador</h2>
-          <p>Preencha seus dados para começar.</p>
+          <p id="registrationDescription">Preencha seus dados para começar.</p>
           <form id="registrationForm" class="auth-form">
             <label class="field-label" id="nameField">Nome completo<input id="fullNameInput" type="text" placeholder="Como devemos chamar você?" required></label>
             <label class="field-label" id="entityField" hidden>Nome da empresa ou cooperativa<input id="entityNameInput" type="text" placeholder="Razão social ou nome do estabelecimento"></label>
-            <label class="field-label">E-mail ou telefone<input id="emailInput" type="text" placeholder="email@exemplo.com" required></label>
+            <label class="field-label" id="condoNameField" hidden>Nome do condomínio<input id="condoNameInput" type="text" placeholder="Ex.: Condomínio Atlântico Recife"></label>
+            <label class="field-label" id="documentField">CPF<input id="documentInput" type="text" inputmode="numeric" placeholder="000.000.000-00" required></label>
+            <label class="field-label">Telefone<input id="phoneInput" type="tel" placeholder="(81) 99999-0000" required></label>
+            <label class="field-label" id="emailField">E-mail<input id="emailInput" type="text" placeholder="email@exemplo.com" required></label>
+            <label class="field-label" id="registerAddressField">Endereço principal<input id="registerAddressInput" type="text" placeholder="Rua, número, bairro e cidade" required></label>
             <label class="field-label">Senha<div class="password-field"><input id="passwordInput" type="password" placeholder="Mínimo 6 caracteres" minlength="6" required><button type="button" id="togglePassword" aria-label="Mostrar senha"><i data-lucide="eye"></i></button></div></label>
             <label class="terms-row"><input type="checkbox" id="termsInput" required><span>Li e aceito os <a href="#">Termos de Uso</a> e a <a href="#">Política de Privacidade</a>.</span></label>
-            <button class="primary-button onboarding-next" type="submit">Criar minha conta <i data-lucide="arrow-right"></i></button>
+            <button class="primary-button onboarding-next" id="registrationSubmit" type="submit">Criar minha conta <i data-lucide="arrow-right"></i></button>
           </form>
         </div>
 
@@ -103,6 +107,7 @@
       <div class="location-chip"><i data-lucide="map-pin"></i><span>Recife, PE</span></div>
       <div class="topbar-actions">
         <button class="icon-button" id="notificationButton" aria-label="Notificações"><i data-lucide="bell"></i><span class="notification-dot"></span></button>
+        <button class="icon-button open-report-global" aria-label="Denunciar descarte irregular"><i data-lucide="siren"></i></button>
         <div class="weather"><i data-lucide="cloud-sun"></i><strong>29°</strong></div>
       </div>
       <button class="top-profile open-profile" type="button" aria-label="Abrir perfil">
@@ -119,34 +124,54 @@
           <button class="primary-button" id="openWizard"><i data-lucide="plus"></i> Agendar coleta</button>
         </div>
 
-        <div class="dashboard-grid resident-grid">
-          <article class="stat-card coin-card">
-            <div class="stat-icon amber"><i data-lucide="circle-dollar-sign"></i></div>
-            <div><span>Moedas Verdes</span><strong id="residentBalance">1.240</strong><small>≈ R$ 124,00 em recompensas</small></div>
-          </article>
-          <article class="stat-card">
-            <div class="stat-icon green"><i data-lucide="scale"></i></div>
-            <div><span>Impacto reciclado</span><strong id="recycledKg">86 kg</strong><small>+12 kg este mês</small></div>
-          </article>
-          <article class="stat-card">
-            <div class="stat-icon blue"><i data-lucide="truck"></i></div>
-            <div><span>Próxima coleta</span><strong>Hoje, 14h</strong><small class="status-text"><span></span> Catador a 20 min</small></div>
-          </article>
+        <div class="resident-tabs module-tabs">
+          <button class="active" data-resident-view="overview"><i data-lucide="layout-dashboard"></i> Visão geral</button>
+          <button data-resident-view="wallet"><i data-lucide="coins"></i> Moedas Verdes</button>
+          <button data-resident-view="report"><i data-lucide="siren"></i> Fazer denúncia</button>
         </div>
 
-        <div class="content-grid">
-          <article class="card map-card">
-            <div class="card-header">
-              <div><p class="eyebrow">MAPA DE COLETA</p><h2>Pontos próximos</h2></div>
-              <button class="secondary-button" id="locateMe"><i data-lucide="crosshair"></i><span>Minha localização</span></button>
-            </div>
-            <div id="map" aria-label="Mapa interativo de pontos de coleta"></div>
-          </article>
+        <div id="residentOverview">
+          <div class="dashboard-grid resident-grid">
+            <article class="stat-card coin-card">
+              <div class="stat-icon amber"><i data-lucide="circle-dollar-sign"></i></div>
+              <div><span>Moedas Verdes</span><strong id="residentBalance">1.240</strong><small>≈ R$ 124,00 em recompensas</small></div>
+            </article>
+            <article class="stat-card">
+              <div class="stat-icon green"><i data-lucide="scale"></i></div>
+              <div><span>Impacto reciclado</span><strong id="recycledKg">86 kg</strong><small>+12 kg este mês</small></div>
+            </article>
+            <article class="stat-card">
+              <div class="stat-icon blue"><i data-lucide="truck"></i></div>
+              <div><span>Próxima coleta</span><strong>Hoje, 14h</strong><small class="status-text"><span></span> Catador a 20 min</small></div>
+            </article>
+          </div>
 
-          <article class="card collections-card">
-            <div class="card-header"><div><p class="eyebrow">ACOMPANHAMENTO</p><h2>Minhas coletas</h2></div><button class="text-button" id="viewAllCollections">Ver tudo</button></div>
-            <div class="collection-list" id="collectionList"></div>
-          </article>
+          <div class="content-grid">
+            <article class="card map-card">
+              <div class="card-header">
+                <div><p class="eyebrow">MAPA DE COLETA</p><h2>Pontos próximos</h2></div>
+                <button class="secondary-button" id="locateMe"><i data-lucide="crosshair"></i><span>Minha localização</span></button>
+              </div>
+              <div id="map" aria-label="Mapa interativo de pontos de coleta"></div>
+            </article>
+
+            <div class="card">
+              <div class="card-header"><div><p class="eyebrow">ACOMPANHAMENTO</p><h2>Minhas coletas</h2></div><button class="text-button" id="viewAllCollections">Ver tudo</button></div>
+              <div class="collection-list" id="collectionList"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="resident-view" id="residentWallet" hidden>
+          <div class="wallet-grid">
+            <article class="wallet-hero"><div><p class="eyebrow">MEU SALDO</p><h2><i data-lucide="coins"></i> <span id="walletBalance">1.240</span> moedas</h2><p>1 Moeda Verde = R$ 0,10</p></div><div class="wallet-level"><strong>Nível 8</strong><span><i></i></span><small>760 pontos para o próximo nível</small></div></article>
+            <article class="card"><div class="card-header"><div><p class="eyebrow">COMO GANHAR</p><h2>Missões verdes</h2></div></div><div class="mission-list"><div><span class="mission-icon"><i data-lucide="recycle"></i></span><div><strong>Recicle 20 kg</strong><small>14 kg concluídos</small></div><b>+120 moedas</b></div><div><span class="mission-icon"><i data-lucide="calendar-check"></i></span><div><strong>Agende 3 coletas</strong><small>2 concluídas</small></div><b>+80 moedas</b></div><div><span class="mission-icon"><i data-lucide="siren"></i></span><div><strong>Reporte focos ambientais</strong><small>1 denúncia válida</small></div><b>+50 moedas</b></div></div></article>
+          </div>
+          <article class="card"><div class="card-header"><div><p class="eyebrow">HISTÓRICO</p><h2>Movimentação de moedas</h2></div></div><div class="wallet-history"><div><span class="green"><i data-lucide="arrow-down-left"></i></span><div><strong>Coleta concluída</strong><small>Hoje • EC-78421</small></div><b>+40</b></div><div><span class="green"><i data-lucide="arrow-down-left"></i></span><div><strong>Denúncia validada</strong><small>16 Nov • #DC-2104</small></div><b>+50</b></div></div></article>
+        </div>
+
+        <div class="resident-view" id="residentReport" hidden>
+          <article class="card report-public-card"><div class="card-header"><div><p class="eyebrow">DENÚNCIA AMBIENTAL</p><h2>Reporte descarte irregular</h2></div></div><p>Informe o endereço, adicione uma foto e capture sua localização. A ocorrência será enviada às autoridades ambientais e ficará visível para catadores e gestores.</p><button class="primary-button full-button" id="openResidentReport"><i data-lucide="camera"></i> Abrir formulário de denúncia</button></article>
         </div>
       </section>
 
@@ -156,34 +181,61 @@
           <label class="offline-toggle"><span><i data-lucide="wifi-off"></i> Modo offline</span><input type="checkbox" id="offlineToggle"><b></b></label>
         </div>
 
-        <div class="collector-layout">
-          <div>
-            <div class="dashboard-grid collector-stats">
-              <article class="mini-stat"><span>Aguardando aceite</span><strong id="pendingCount">4</strong></article>
-              <article class="mini-stat"><span>Em rota hoje</span><strong>7</strong></article>
-              <article class="mini-stat"><span>Concluídas</span><strong>18</strong></article>
+        <div class="collector-tabs module-tabs">
+          <button class="active" data-collector-view="overview"><i data-lucide="route"></i> Rotas e chamados</button>
+          <button data-collector-view="wallet"><i data-lucide="wallet-cards"></i> Ganhos e saque</button>
+          <button data-collector-view="reports"><i data-lucide="siren"></i> Denúncias ambientais</button>
+        </div>
+
+        <div id="collectorOverview">
+          <div class="collector-layout">
+            <div>
+              <div class="dashboard-grid collector-stats">
+                <article class="mini-stat"><span>Aguardando aceite</span><strong id="pendingCount">4</strong></article>
+                <article class="mini-stat"><span>Em rota hoje</span><strong>7</strong></article>
+                <article class="mini-stat"><span>Concluídas</span><strong>18</strong></article>
+              </div>
+              <article class="card collector-map-card">
+                <div class="card-header"><div><p class="eyebrow">MAPA DE ROTAS</p><h2>Chamados próximos</h2></div><button class="secondary-button" id="locateCollector"><i data-lucide="crosshair"></i> Minha posição</button></div>
+                <div id="collectorMap" aria-label="Mapa de rotas do catador"></div>
+              </article>
+              <div class="card">
+                <div class="card-header"><div><p class="eyebrow">PRIORIDADE</p><h2>Chamados disponíveis</h2></div><button class="secondary-button" id="poolButton"><i data-lucide="route"></i> Pool de bairro</button></div>
+                <div class="calls-list" id="callsList"></div>
+              </div>
             </div>
-            <div class="card">
-              <div class="card-header"><div><p class="eyebrow">PRIORIDADE</p><h2>Chamados disponíveis</h2></div><button class="secondary-button" id="poolButton"><i data-lucide="route"></i> Pool de Bairro</button></div>
-              <div class="calls-list" id="callsList"></div>
-            </div>
+            <aside class="card route-card">
+              <div class="card-header"><div><p class="eyebrow">OTIMIZAÇÃO</p><h2>Minha rota</h2></div><span class="route-badge">5 paradas</span></div>
+              <div class="route-list">
+                <div><b>1</b><span><strong>Boa Viagem, 812</strong><small>Plástico • 8 kg</small></span><em>14:00</em></div>
+                <div><b>2</b><span><strong>Rua Bruno Veloso</strong><small>Papel • 5 kg</small></span><em>14:35</em></div>
+                <div><b>3</b><span><strong>Imbiribeira</strong><small>Eletrônicos • 3 kg</small></span><em>15:10</em></div>
+              </div>
+              <button class="danger-outline-button open-report-global"><i data-lucide="siren"></i> Nova denúncia ambiental</button>
+            </aside>
           </div>
-          <aside class="card route-card">
-            <div class="card-header"><div><p class="eyebrow">OTIMIZAÇÃO</p><h2>Minha rota</h2></div><span class="route-badge">5 paradas</span></div>
-            <div class="route-list">
-              <div><b>1</b><span><strong>Boa Viagem, 812</strong><small>Plástico • 8 kg</small></span><em>14:00</em></div>
-              <div><b>2</b><span><strong>Rua Bruno Veloso</strong><small>Papel • 5 kg</small></span><em>14:35</em></div>
-              <div><b>3</b><span><strong>Imbiribeira</strong><small>Eletrônicos • 3 kg</small></span><em>15:10</em></div>
-            </div>
-            <button class="danger-outline-button" id="openReport"><i data-lucide="siren"></i> Nova denúncia ambiental</button>
-          </aside>
+        </div>
+
+        <div class="collector-view" id="collectorWallet" hidden>
+          <div class="wallet-grid">
+            <article class="wallet-hero"><div><p class="eyebrow">SALDO DO CATADOR</p><h2><i data-lucide="wallet-cards"></i> R$ <span id="collectorAvailableMoney">620,00</span></h2><p>Recebimentos concluídos disponíveis para saque</p></div><div class="wallet-level"><strong>12 coletas</strong><span><i></i></span><small>Meta mensal: 20 coletas</small></div></article>
+            <article class="card"><div class="card-header"><div><p class="eyebrow">HISTÓRICO DE GANHOS</p><h2>Movimentação financeira</h2></div></div><div class="financial-history" id="financialHistory"></div></article>
+          </div>
+          <article class="card"><div class="card-header"><div><p class="eyebrow">SAQUE</p><h2>Solicitar retirada</h2></div></div><label class="field-label">Valor do saque<input id="withdrawalAmount" type="number" placeholder="R$ 100,00" min="100" step="100"></label><button class="primary-button full-button" id="requestWithdrawal">Solicitar saque</button></article>
+        </div>
+
+        <div class="collector-view" id="collectorReports" hidden>
+          <div class="report-list" id="reportList"></div>
         </div>
       </section>
 
       <section class="module" id="managementModule">
         <div class="page-heading">
           <div><p class="eyebrow">GESTÃO B2B • PREFEITURA</p><h1>Centro de inteligência</h1></div>
-          <button class="secondary-button" id="exportReport"><i data-lucide="download"></i> Exportar relatório</button>
+          <div style="display:flex; gap:8px;">
+            <button class="secondary-button open-report-global"><i data-lucide="siren"></i> Nova denúncia</button>
+            <button class="secondary-button" id="exportReport"><i data-lucide="download"></i> Exportar relatório</button>
+          </div>
         </div>
 
         <div class="kpi-grid">
@@ -282,6 +334,7 @@
       <article class="certificate" id="certificate">
         <div class="certificate-brand"><img src="logo.png" alt="EcoConecta"></div>
         <p>CERTIFICADO SOCIOAMBIENTAL</p><h2 id="certificatePartner">Condomínio Atlântico Recife</h2>
+        <small id="certificatePartnerDetails">Endereço não informado</small>
         <small>Programa de Gestão de Resíduos Sólidos • PNRS / Lei 12.305</small>
         <div class="certificate-metrics"><div><strong>8.420 kg</strong><span>reciclados</span></div><div><strong>156</strong><span>coletas</span></div><div><strong>98%</strong><span>conformidade</span></div></div>
         <canvas id="qrcode"></canvas>
@@ -295,7 +348,7 @@
     <div class="modal profile-modal">
       <div class="modal-header"><div><p class="eyebrow">CONFIGURAÇÕES DA CONTA</p><h2>Meu perfil</h2></div><button class="icon-button close-modal" aria-label="Fechar"><i data-lucide="x"></i></button></div>
       <div class="profile-hero"><label class="profile-photo"><input type="file" id="profilePhotoInput" accept="image/*"><span id="profilePhotoPreview"><b class="profileInitials">AR</b></span><em><i data-lucide="camera"></i></em></label><div><strong class="profileName">Ana Ribeiro</strong><small id="profileRoleModal">Moradora • Recife</small></div></div>
-      <div class="settings-section"><h3>Informações pessoais</h3><div class="two-columns"><label class="field-label">Nome<input id="profileNameInput" type="text" value="Ana Ribeiro"></label><label class="field-label">Telefone<input id="profilePhoneInput" type="tel" value="(81) 99999-0000"></label></div><label class="field-label">E-mail<input id="profileEmailInput" type="email" value="ana.ribeiro@email.com"></label><label class="field-label">Endereço principal<input id="profileAddressInput" type="text" value="Rua Setúbal, 812 — Boa Viagem"></label></div>
+      <div class="settings-section"><h3>Informações pessoais</h3><div class="two-columns"><label class="field-label">Nome<input id="profileNameInput" type="text" value="Ana Ribeiro"></label><label class="field-label" id="profileDocumentField">CPF / CNPJ<input id="profileDocumentInput" type="text" inputmode="numeric"></label></div><label class="field-label" id="profileCondoField" hidden>Nome do condomínio<input id="profileCondoNameInput" type="text"></label><label class="field-label">Telefone<input id="profilePhoneInput" type="tel" value="(81) 99999-0000"></label><label class="field-label">E-mail<input id="profileEmailInput" type="email" value="ana.ribeiro@email.com"></label><label class="field-label">Endereço principal<input id="profileAddressInput" type="text" value="Rua Setúbal, 812 — Boa Viagem"></label></div>
       <div class="settings-section"><h3>Preferências</h3><label class="setting-row"><span><i data-lucide="bell"></i><b>Notificações</b><small>Status de coleta e alertas ambientais</small></span><input type="checkbox" checked></label><label class="setting-row"><span><i data-lucide="moon"></i><b>Tema escuro</b><small>Preferência visual do aplicativo</small></span><input type="checkbox" id="darkModeToggle"></label><label class="setting-row"><span><i data-lucide="map-pin"></i><b>Localização precisa</b><small>Melhora recomendações e rotas</small></span><input type="checkbox" checked></label></div>
       <div class="profile-actions"><button class="danger-outline-button" id="logoutButton"><i data-lucide="log-out"></i> Sair da conta</button><button class="primary-button" id="saveProfile"><i data-lucide="save"></i> Salvar alterações</button></div>
     </div>
