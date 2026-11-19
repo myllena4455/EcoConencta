@@ -562,6 +562,13 @@ function updateRegistrationFieldsByRole() {
   $('#condoNameInput').required = isManagement;
 
   if (isResident) {
+    $('#entityNameInput').value = '';
+    $('#condoNameInput').value = '';
+  } else if (isCollector) {
+    $('#condoNameInput').value = '';
+  }
+
+  if (isResident) {
     $('#registrationTitle').textContent = 'Criar conta de morador';
     $('#registrationDescription').textContent = 'Agende coletas, acumule Moedas Verdes e acompanhe seus impactos.';
     $('#entityField').hidden = true;

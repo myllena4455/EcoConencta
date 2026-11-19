@@ -732,3 +732,176 @@ img { max-width: 100%; }
   .certificate-modal > .close-modal, .certificate-modal > .primary-button { display: none; }
   .certificate { border: 8px double var(--eco); }
 }
+
+@media (max-width: 760px) {
+  .sidebar {
+    width: min(280px, 82vw);
+    transform: translateX(-100%);
+    transition: transform .25s ease;
+    box-shadow: 20px 0 50px rgba(15, 23, 42, .25);
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+  }
+
+  .app-shell {
+    width: 100%;
+    max-width: 100%;
+    margin-left: 0;
+  }
+
+  .topbar {
+    width: 100%;
+    height: 62px;
+    padding: 0 12px;
+  }
+
+  .menu-button {
+    display: grid;
+    flex: 0 0 44px;
+  }
+
+  .location-chip,
+  .weather,
+  .top-profile {
+    display: none !important;
+  }
+
+  .topbar-actions {
+    margin-left: auto;
+  }
+
+  .topbar-actions .icon-button {
+    width: 44px;
+    height: 44px;
+  }
+
+  .main-content {
+    width: 100%;
+    max-width: 100%;
+    padding: 18px 12px calc(96px + env(safe-area-inset-bottom));
+  }
+
+  .page-heading {
+    width: 100%;
+    margin-bottom: 16px;
+  }
+
+  .page-heading h1 {
+    font-size: 22px;
+  }
+
+  .resident-grid,
+  .collector-stats,
+  .kpi-grid,
+  .wallet-grid,
+  .content-grid,
+  .management-grid,
+  .collector-layout {
+    width: 100%;
+    max-width: 100%;
+    grid-template-columns: 1fr !important;
+  }
+
+  .stat-card,
+  .mini-stat,
+  .kpi-card,
+  .card,
+  .wallet-hero {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .resident-grid .stat-card:last-child {
+    grid-column: auto;
+  }
+
+  .module-tabs {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .module-tabs button {
+    min-width: 0;
+    height: 58px;
+    justify-content: center;
+    flex-direction: column;
+    gap: 3px;
+    padding: 6px 4px;
+    text-align: center;
+    white-space: normal;
+    line-height: 1.05;
+  }
+
+  .module-tabs button svg {
+    width: 18px;
+  }
+
+  .card-header {
+    gap: 8px;
+  }
+
+  .card-header .secondary-button,
+  .card-header .text-button {
+    max-width: 48%;
+  }
+
+  .map-card #map,
+  #collectorMap {
+    height: 280px;
+  }
+
+  .collector-layout > *,
+  .collector-layout > div,
+  .content-grid > *,
+  .management-grid > *,
+  .wallet-grid > * {
+    min-width: 0;
+  }
+
+  .collection-item {
+    grid-template-columns: 42px minmax(0, 1fr);
+  }
+
+  .collection-status {
+    grid-column: 2;
+    text-align: left;
+  }
+
+  .call-item {
+    grid-template-columns: 44px minmax(0, 1fr);
+  }
+
+  .call-actions {
+    grid-column: 1 / -1;
+  }
+
+  .call-actions button {
+    height: 44px;
+  }
+
+  .financial-item,
+  .wallet-history > div,
+  .mission-list > div,
+  .report-item {
+    min-width: 0;
+  }
+
+  .financial-item strong,
+  .financial-item small,
+  .wallet-history strong,
+  .wallet-history small,
+  .mission-list strong,
+  .mission-list small,
+  .report-item h3,
+  .report-item p,
+  .report-item small {
+    overflow-wrap: anywhere;
+  }
+
+  .mobile-nav {
+    height: calc(68px + env(safe-area-inset-bottom));
+  }
+}
