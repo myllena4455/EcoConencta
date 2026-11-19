@@ -702,6 +702,10 @@ function configureRole(role) {
     element.textContent = profile.name.split(' ').map(part => part[0]).slice(0, 2).join('').toUpperCase();
   });
 
+  const greetingName = role === 'resident' ? profile.name.split(' ')[0] : profile.name;
+  const residentGreeting = $('#residentGreeting');
+  if (residentGreeting) residentGreeting.innerHTML = `Olá, ${greetingName}! <span>🌿</span>`;
+
   $('#profileRoleModal').textContent = `${roleLabel} • Recife`;
   $('#profileNameInput').value = profile.name;
   $('#profilePhoneInput').value = profile.phone;
@@ -800,6 +804,11 @@ $('#saveProfile')?.addEventListener('click', () => {
   $$('.profileInitials').forEach(element => {
     element.textContent = profile.name.split(' ').map(part => part[0]).slice(0, 2).join('').toUpperCase();
   });
+  const savedRole = previousProfile.role || selectedRole;
+  const greetingName = savedRole === 'resident' ? profile.name.split(' ')[0] : profile.name;
+  const residentGreeting = $('#residentGreeting');
+  if (residentGreeting) residentGreeting.innerHTML = `Olá, ${greetingName}! <span>🌿</span>`;
+
   syncPartnerSelectFromProfile();
   closeModal($('#profileModal'));
   toast('Informações do perfil atualizadas.', 'save');
